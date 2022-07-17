@@ -1,0 +1,6 @@
+name: Auctionhouse
+version: '${project.version}'
+main: es.brouse.auctionhouse.loader.Auctionhouse
+api-version: 1.19
+prefix: AH
+authors: [ Brouse_13 ]
