@@ -161,7 +161,7 @@ public class PagedGUI extends Pageable<ItemStack> implements InventoryHolder {
      * Get the previous button {@link GUIButton}
      * @return the GUI previous button
      */
-    private GUIButton prevButton() {
+    public GUIButton prevButton() {
         return GUIButtonBuilder.create()
                 .button(new ItemStack(Material.ARROW))
                 .clickEvent(event -> {
@@ -173,7 +173,7 @@ public class PagedGUI extends Pageable<ItemStack> implements InventoryHolder {
      * Get the previous button {@link GUIButton}
      * @return the GUI next button
      */
-    private GUIButton nextButton() {
+    public GUIButton nextButton() {
         return GUIButtonBuilder.create()
                 .button(new ItemStack(Material.ARROW))
                 .clickEvent(event -> {
