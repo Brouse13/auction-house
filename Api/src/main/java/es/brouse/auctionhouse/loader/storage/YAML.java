@@ -1,4 +1,4 @@
-package es.brouse.auctionhouse.loader.utils;
+package es.brouse.auctionhouse.loader.storage;
 
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -14,7 +14,6 @@ public class YAML extends YamlConfiguration {
      * Creates a new empty yml with the specific name on the root directory
      * @param name yaml name
      * @param overwrite if file must be overwritten
-     * @throws IOException if there was any exception while creating the file
      */
     public YAML(String name, boolean overwrite){
         if (plugin == null)
@@ -41,6 +40,23 @@ public class YAML extends YamlConfiguration {
             load(file);
         } catch (InvalidConfigurationException | IOException exception) {
             throw new RuntimeException(exception);
+        }
+    }
+
+    /**
+     * Get from the config an enum that matches with {@param type}. If the enum does not
+     * contain the value retrieved on the config it will return {@param defValue}
+     * @param key key to lookup
+     * @param type type of the enum
+     * @param defValue dfault value
+     * @return the found value on the enum, otherwise the {@param defValue}
+     * @param <T> Enum type
+     */
+    public <T extends Enum<T>> T getDefEnum(String key, Class<T> type, T defValue) {
+        try {
+            return Enum.valueOf(type, getString(key, key));
+        }catch (Exception exception) {
+            return defValue;
         }
     }
 
