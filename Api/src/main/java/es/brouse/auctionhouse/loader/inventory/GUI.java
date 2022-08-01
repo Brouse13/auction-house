@@ -1,6 +1,9 @@
 package es.brouse.auctionhouse.loader.inventory;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import es.brouse.auctionhouse.loader.utils.builders.ItemBuilder;
+import lombok.Getter;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -13,10 +16,11 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Map;
 
 public class GUI implements InventoryHolder {
-    private final String title;
-    private final int size;
-    private ItemStack background = new ItemStack(Material.AIR);
-    private final Map<Integer, GUIButton> buttons = Maps.newHashMap();
+    @Getter private final String title;
+    @Getter private final int size;
+    @Getter private boolean fixed;
+    private ItemStack background;
+    private final Map<Integer, GUIButton> buttons;
 
     /**
      * Create a new PagedGUI with a given title and size
@@ -26,6 +30,9 @@ public class GUI implements InventoryHolder {
     public GUI(int size, String name) {
         this.title = ChatColor.translateAlternateColorCodes('&', name);
         this.size = size;
+        this.fixed = false;
+        this.buttons = Maps.newHashMap();
+        this.background = ItemBuilder.of(Material.AIR).build();
     }
 
     /**
@@ -34,6 +41,15 @@ public class GUI implements InventoryHolder {
      */
     public void setBackground(ItemStack background) {
         this.background = background;
+    }
+
+    /**
+     * Set if the item inside inventory can be moved otherwise
+     * players won't be able to move them.
+     * @param fixed If players can move items
+     */
+    public void setFixed(boolean fixed) {
+        this.fixed = fixed;
     }
 
     /**
@@ -51,6 +67,14 @@ public class GUI implements InventoryHolder {
      */
     public void removeButton(int slot) {
         buttons.remove(slot);
+    }
+
+    /**
+     * Get an immutable map with all the buttons on the GUI
+     * @return all the GUI buttons
+     */
+    public Map<Integer, GUIButton> getButtons() {
+        return ImmutableMap.copyOf(buttons);
     }
 
     @Override

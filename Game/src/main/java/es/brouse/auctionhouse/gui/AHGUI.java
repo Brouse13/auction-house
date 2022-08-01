@@ -1,6 +1,8 @@
 package es.brouse.auctionhouse.gui;
 
+import es.brouse.auctionhouse.AuctionHouse;
 import es.brouse.auctionhouse.loader.inventory.GUI;
+import es.brouse.auctionhouse.loader.translator.Translator;
 import es.brouse.auctionhouse.loader.utils.builders.GUIButtonBuilder;
 import es.brouse.auctionhouse.loader.utils.builders.ItemBuilder;
 import es.brouse.auctionhouse.section.AHSection;
@@ -9,10 +11,11 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 
 import java.util.function.Consumer;
 
-public class SectionGUI extends GUI {
-    public SectionGUI() {
-        super(18, "AuctionHouse");
+public class AHGUI extends GUI {
+    public AHGUI() {
+        super(9, Translator.getString("messages.gui.ah.title", AuctionHouse.getSettings().getLang()));
         setBackground(ItemBuilder.of(Material.LIGHT_GRAY_STAINED_GLASS_PANE).build());
+        setFixed(true);
 
         //Set up the section items
         setButton(1, GUIButtonBuilder.create()
@@ -39,6 +42,6 @@ public class SectionGUI extends GUI {
     }
 
     private Consumer<InventoryClickEvent> openSectionGUI(AHSection section) {
-        return event -> {};
+        return event -> System.out.println(section);
     }
 }
