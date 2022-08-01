@@ -1,6 +1,9 @@
 name: Auctionhouse
 version: '${project.version}'
-main: es.brouse.auctionhouse.loader.Auctionhouse
+main: es.brouse.auctionhouse.AuctionHouse
 api-version: 1.19
 prefix: AH
 authors: [ Brouse_13 ]
+commands:
+  ah:
+    description: Open the main auctionHouse menu
