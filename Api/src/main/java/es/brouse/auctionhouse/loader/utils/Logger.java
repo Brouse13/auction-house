@@ -1,5 +1,6 @@
 package es.brouse.auctionhouse.loader.utils;
 
+import es.brouse.auctionhouse.loader.storage.YAML;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -8,6 +9,10 @@ import java.util.logging.Level;
 public class Logger {
     private static JavaPlugin plugin;
 
+    /**
+     * Singleton that will handle the {@link Logger}
+     * @param plugin plugin that will handle the Logger
+     */
     public static void init(JavaPlugin plugin) {
         if (Logger.plugin != null)
             throw new IllegalStateException("Logger was already initiated");

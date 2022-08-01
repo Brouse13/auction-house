@@ -11,6 +11,17 @@ public class YAML extends YamlConfiguration {
     private static JavaPlugin plugin;
 
     /**
+     * Singleton that will handle the {@link YAML}
+     * @param plugin plugin that will handle the YAML
+     */
+    public static void init(JavaPlugin plugin) {
+        //Check the singleton instance for the plugin
+        if (YAML.plugin != null)
+            throw new IllegalStateException("YAML class has already been instanced");
+        YAML.plugin = plugin;
+    }
+
+    /**
      * Creates a new empty yml with the specific name on the root directory
      * @param name yaml name
      * @param overwrite if file must be overwritten
@@ -58,12 +69,5 @@ public class YAML extends YamlConfiguration {
         }catch (Exception exception) {
             return defValue;
         }
-    }
-
-    public static void init(JavaPlugin plugin) {
-        //Check the singleton instance for the plugin
-        if (YAML.plugin != null)
-            throw new IllegalStateException("YAML class has already been instanced");
-        YAML.plugin = plugin;
     }
 }
