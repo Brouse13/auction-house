@@ -1,16 +1,10 @@
 package es.brouse.auctionhouse.loader.translator;
-
 import es.brouse.auctionhouse.loader.storage.YAML;
 import lombok.Getter;
 
 import java.util.List;
 
-public class Translator extends YAML {
-
-    public Translator() {
-        super("messages", false);
-    }
-
+public class Translator {
     /**
      * Get from the messages file the current translation string
      * @param key translation key
@@ -32,9 +26,9 @@ public class Translator extends YAML {
     }
 
     public enum Lang {
-        en_US(new YAML("messages/nes_US", false)),
+        en_US(new YAML("messages/es_US", false)),
         es_ES(new YAML("messages/es_ES", false)),
-        ca_ES(new YAML("messages/ca/ES", false));
+        ca_ES(new YAML("messages/ca_ES", false));
         @Getter private final YAML file;
 
         Lang(YAML file) {
