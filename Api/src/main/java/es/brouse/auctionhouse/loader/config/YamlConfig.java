@@ -16,11 +16,7 @@ public class YamlConfig extends YAML implements Config {
 
     @Override
     public Translator.Lang getLang() {
-        try {
-            return Translator.Lang.valueOf(getString("config.lang", "en_US"));
-        }catch (IllegalArgumentException exception) {
-            return Translator.Lang.en_US;
-        }
+        return getDefEnum("config.lang", Translator.Lang.class, Translator.Lang.en_US);
     }
 
     @Override
@@ -30,15 +26,15 @@ public class YamlConfig extends YAML implements Config {
 
     @Override
     public ItemStack getNextButton() {
-        return ItemBuilder.of(getDefEnum("gui.next_button.item", Material.class, Material.ARROW))
-                .displayName(Translator.getString("messages.next_button.name", getLang()))
-                .lore(Translator.getStringList("messages.nex_button.lore", getLang())).build();
+        return ItemBuilder.of(getDefEnum("ahgui.next_button", Material.class, Material.ARROW))
+                .displayName(Translator.getString("messages.sectiongui.next_button.name", getLang()))
+                .lore(Translator.getStringList("messages.sectiongui.next_button.lore", getLang())).build();
     }
 
     @Override
     public ItemStack getPreviousButton() {
-        return ItemBuilder.of(getDefEnum("gui.prev_bu.item", Material.class, Material.ARROW))
-                .displayName(Translator.getString("messages.next_button.name", getLang()))
-                .lore(Translator.getStringList("messages.nex_button.lore", getLang())).build();
+        return ItemBuilder.of(getDefEnum("ahgui.prev_button", Material.class, Material.ARROW))
+                .displayName(Translator.getString("messages.next_button.next_button.name", getLang()))
+                .lore(Translator.getStringList("messages.next_button.next_button.lore", getLang())).build();
     }
 }
