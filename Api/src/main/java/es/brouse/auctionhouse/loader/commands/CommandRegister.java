@@ -7,6 +7,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class CommandRegister {
     private static JavaPlugin plugin;
 
+    /**
+     * Singleton that will handle the {@link CommandRegister}
+     * @param plugin plugin that will handle the CommandRegister
+     */
     public static void init(JavaPlugin plugin) {
         if (CommandRegister.plugin != null)
             throw new IllegalStateException("CommandRegister was already initiated");
@@ -14,20 +18,37 @@ public class CommandRegister {
         CommandRegister.plugin = plugin;
     }
 
-    public static void register(CommandBase command) {
-        setExecutor(command.getName(), command);
+    /**
+     * Register a new {@param command} into the plugin
+     * @param command command to register
+     * @return the registered command
+     */
+    public static BaseCommand register(BaseCommand command) {
+        return pluginRegister(command.getName(), command);
     }
 
-    public static void unregister(CommandBase command) {
-        setExecutor(command.getName(), null);
+    /**
+     * Unregister the {@param command} from the plugin
+     * @param command command to unregister
+     */
+    public static void unregister(BaseCommand command) {
+        pluginRegister(command.getName(), null);
     }
 
-    private static void setExecutor(String name, CommandBase executor) {
+    /**
+     * Register into the given plugin the command
+     * @param name command name
+     * @param executor command executor
+     * @return the operation status
+     */
+    private static BaseCommand pluginRegister(String name, BaseCommand executor) {
         PluginCommand pluginCommand = plugin.getCommand(name);
         if (pluginCommand == null) {
             Logger.error("Command "+ name+ " is not registered in plugin.yml");
-            return;
+            return null;
         }
+
         pluginCommand.setExecutor(executor);
+        return executor;
     }
 }

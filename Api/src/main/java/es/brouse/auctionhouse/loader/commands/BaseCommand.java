@@ -1,14 +1,15 @@
 package es.brouse.auctionhouse.loader.commands;
 
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 import java.util.Set;
 
-public abstract class CommandBase implements CommandExecutor {
-    protected Set<CommandBase> subcommands;
+public abstract class BaseCommand implements CommandExecutor {
+    protected Set<BaseCommand> subcommands = Sets.newHashSet();
 
     /**
      * Get the name of the command
@@ -26,15 +27,15 @@ public abstract class CommandBase implements CommandExecutor {
      * Add a new subcommand to the subCommands list
      * @param subCommand subcommand to add
      */
-    public void addSubCommand(CommandBase subCommand) {
+    public void addSubCommand(BaseCommand subCommand) {
         subcommands.add(subCommand);
     }
 
     /**
-     * Get all the subcommands of this {@link CommandBase}
+     * Get all the subcommands of this {@link BaseCommand}
      * @return all the command subcommands
      */
-    public Set<CommandBase> getSubcommands() {
+    public Set<BaseCommand> getSubcommands() {
         return ImmutableSet.copyOf(subcommands);
     }
 

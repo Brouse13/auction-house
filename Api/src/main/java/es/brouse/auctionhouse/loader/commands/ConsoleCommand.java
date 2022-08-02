@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 
 import java.util.Arrays;
 
-public abstract class ConsoleCommand extends CommandBase {
+public abstract class ConsoleCommand extends BaseCommand {
     //Is command for the console, it has all the perms, so we don't have to check them
     @Override
     public String getPermission() {
@@ -15,7 +15,7 @@ public abstract class ConsoleCommand extends CommandBase {
     }
 
     @Override
-    public void addSubCommand(CommandBase subCommand) {
+    public void addSubCommand(BaseCommand subCommand) {
         if (!(subCommand instanceof ConsoleCommand))
             throw new IllegalStateException("This command only accepts ConsoleCommand subcommands");
         subcommands.add(subCommand);
@@ -38,8 +38,8 @@ public abstract class ConsoleCommand extends CommandBase {
             }
             /*If we found a subcommand we'll execute it again the 'onCommand()' but in the subcommand.
             If not, we'll execute the 'execute()' to show the command info*/
-            return getSubcommands().stream().filter(commandBase -> commandBase.getName().equals(args[0])).findFirst()
-                    .map(commandBase -> commandBase.onCommand(sender, command, label, removeFirst(args)))
+            return getSubcommands().stream().filter(baseCommand -> baseCommand.getName().equals(args[0])).findFirst()
+                    .map(baseCommand -> baseCommand.onCommand(sender, command, label, removeFirst(args)))
                     .orElseGet(() -> execute(sender, command, label, args));
         }else {
             //Finally, we found the command, so we'll execute it
@@ -51,7 +51,7 @@ public abstract class ConsoleCommand extends CommandBase {
         String[] newArgs;
         try {
             newArgs = Arrays.copyOfRange(args, 1, args.length);
-        }catch (ArrayIndexOutOfBoundsException exception) {
+        }catch (Exception exception) {
             newArgs = new String[0];
         }
         return newArgs;
