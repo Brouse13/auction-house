@@ -25,6 +25,26 @@ public class YamlConfig extends YAML implements Config {
     }
 
     @Override
+    public String getUsername() {
+        return null;
+    }
+
+    @Override
+    public String getPassword() {
+        return null;
+    }
+
+    @Override
+    public String getDatabase() {
+        return null;
+    }
+
+    @Override
+    public int getPort() {
+        return 0;
+    }
+
+    @Override
     public ItemStack getNextButton() {
         return ItemBuilder.of(getDefEnum("ahgui.next_button", Material.class, Material.ARROW))
                 .displayName(Translator.getString("messages.sectiongui.next_button.name", getLang()))

@@ -3,7 +3,6 @@ package es.brouse.auctionhouse;
 import es.brouse.auctionhouse.commands.AHCommand;
 import es.brouse.auctionhouse.loader.commands.CommandRegister;
 import es.brouse.auctionhouse.loader.config.Config;
-import es.brouse.auctionhouse.loader.config.MysqlConfig;
 import es.brouse.auctionhouse.loader.config.YamlConfig;
 import es.brouse.auctionhouse.loader.inventory.InventoryController;
 import es.brouse.auctionhouse.loader.storage.YAML;
@@ -22,7 +21,7 @@ public class AuctionHouse extends JavaPlugin {
 
         //SetUp mysql if possible
         settings = new YamlConfig();
-        if (settings.isMysqlEnabled()) settings = new MysqlConfig(settings);
+        //TODO Add here things that will be loaded with mysql
 
         this.getServer().getPluginManager().registerEvents(new InventoryController(), this);
 
