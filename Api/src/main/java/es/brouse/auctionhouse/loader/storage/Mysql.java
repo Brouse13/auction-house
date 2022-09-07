@@ -44,7 +44,7 @@ public class Mysql {
      * @return the sql connection
      * @throws SQLException if any error was established
      */
-    public Connection getConnection() throws SQLException {
+    public static Connection getConnection() throws SQLException {
         return dataSource.getConnection();
     }
 }
