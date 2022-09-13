@@ -25,22 +25,19 @@ public class Mysql {
             return;
         }
 
-        config.setJdbcUrl("com.mysql.cj.jdbc.Driver");
+        config.setJdbcUrl(settings.getJdbc());
+        config.setDriverClassName("com.mysql.jdbc.Driver");
         config.setUsername(settings.getUsername());
         config.setPassword(settings.getPassword());
-        config.addDataSourceProperty("cachePrepStmts", "true");
-        config.addDataSourceProperty("prepStmtCacheSize", "250");
-        config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
-        config.setMaximumPoolSize(10);
+        config.setMaximumPoolSize(6);
         config.setConnectionTimeout(5000);
         dataSource = new HikariDataSource(config);
     }
 
     /**
      * Get the established connection
-     * ThreadPool connections - 10
+     * ThreadPool connections - 6
      * ThreadPool timeout     - 5000ms
-     * Cache limit            - 2048 / 250
      * @return the sql connection
      * @throws SQLException if any error was established
      */
