@@ -8,7 +8,8 @@ import java.util.*;
 public class Pageable<T> {
     private final Map<Integer, List<T>> pages;
     private final int pageSize;
-    @Getter private int currentPage;
+    @Getter
+    private int currentPage;
 
     public Pageable(int pageSize) {
         this.pageSize = pageSize;
@@ -51,7 +52,8 @@ public class Pageable<T> {
      * @param elements Elements to add
      * @return If the page was added
      */
-    public boolean addPage(T... elements) {
+    @SafeVarargs
+    public final boolean addPage(T... elements) {
         if (pageSize == -1 || elements.length <= pageSize) {
             pages.put(pages.size() + 1, Arrays.asList(elements));
             return true;
