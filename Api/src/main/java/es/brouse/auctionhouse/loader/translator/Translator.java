@@ -1,8 +1,12 @@
 package es.brouse.auctionhouse.loader.translator;
+import com.google.common.collect.Lists;
 import es.brouse.auctionhouse.loader.storage.YAML;
 import lombok.Getter;
+import org.bukkit.ChatColor;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Translator {
     /**
@@ -12,7 +16,8 @@ public class Translator {
      * @return the translated key
      */
     public static String getString(String key, Lang lang) {
-        return lang.getFile().getString(key, lang+ "."+ key);
+        return ChatColor.translateAlternateColorCodes('&',
+                lang.getFile().getString(key, lang+ "."+ key));
     }
 
     /**
@@ -22,7 +27,9 @@ public class Translator {
      * @return the translated key
      */
     public static List<String> getStringList(String key, Lang lang) {
-        return lang.getFile().getStringList(key);
+        List<String> lines = lang.getFile().getStringList(key).stream()
+                .map(line -> ChatColor.translateAlternateColorCodes('&', line)).collect(Collectors.toList());
+        return lines.isEmpty() ? Lists.newArrayList("[" + lang+ "." + key + "]") : lines;
     }
 
     public enum Lang {
