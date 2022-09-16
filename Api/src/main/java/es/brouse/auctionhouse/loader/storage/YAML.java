@@ -1,14 +1,19 @@
 package es.brouse.auctionhouse.loader.storage;
 
+import com.google.common.base.Charsets;
+import es.brouse.auctionhouse.loader.utils.Logger;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 public class YAML extends YamlConfiguration {
     private static JavaPlugin plugin;
+    private File file;
 
     /**
      * Singleton that will handle the {@link YAML}
@@ -31,7 +36,7 @@ public class YAML extends YamlConfiguration {
             throw new IllegalStateException("YAML has not been instanced yet");
 
         //Create new file based on the name
-        File file = new File(plugin.getDataFolder().getAbsoluteFile()+ "/"+ name+ ".yml");
+        file = new File(plugin.getDataFolder().getAbsoluteFile()+ "/"+ name+ ".yml");
         file.getParentFile().mkdirs();
 
         //Create the file based on 'overwrite'
@@ -52,6 +57,26 @@ public class YAML extends YamlConfiguration {
         } catch (InvalidConfigurationException | IOException exception) {
             throw new RuntimeException(exception);
         }
+    }
+
+    /**
+     * Apply the changes on the {@link YAML} into the file
+     */
+    public void save() {
+        try {
+            save(file);
+        }catch (IOException exception) {
+            Logger.error("Unable to save file " + file.getName());
+        }
+    }
+
+    /**
+     * Reload the content of the {@link YAML}
+     */
+    public void reload() {
+        save();
+        setDefaults(YamlConfiguration.loadConfiguration(file));
+
     }
 
     /**
