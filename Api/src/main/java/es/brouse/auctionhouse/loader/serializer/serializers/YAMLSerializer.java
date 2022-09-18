@@ -40,9 +40,24 @@ public class YAMLSerializer extends Serializer {
         return Reflexion.instance(entity.getClass(), Arrays.stream(getFields()).map(section::get).toArray());
     }
 
-    @Override
-    public List<Object> getEntities() {
-        return Lists.newArrayList(getEntity());
+    public Object[] getEntities(int from, int to) {
+        ConfigurationSection section = storage.getConfigurationSection(entityName);
+        List<Object> objects = Lists.newArrayList();
+
+        if (section == null) return objects.toArray();
+
+        //I hope a file doesn't handle that amount of serialized objects
+        short i = 0;
+        for (String key : section.getKeys(false)) {
+            if (i >= from) {
+                Object[] args = Arrays.stream(getFields()).map(fields ->
+                    section.get(section.getCurrentPath() + "." + key)).toArray();
+                objects.add(Reflexion.instance(entity.getClass(), args));
+            }
+            if (i < to) break;
+            i++;
+        }
+        return objects.toArray();
     }
 
     @Override
