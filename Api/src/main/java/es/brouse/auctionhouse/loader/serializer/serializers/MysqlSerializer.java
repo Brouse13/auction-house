@@ -18,6 +18,8 @@ public class MysqlSerializer extends Serializer {
 
     public MysqlSerializer(Object entity) {
         super(entity);
+
+        //Add the equivalences of fields to sql fields
         equivalence.put(Float.class, "float");
         equivalence.put(Integer.class, "int");
         equivalence.put(Double.class, "double");
@@ -29,9 +31,9 @@ public class MysqlSerializer extends Serializer {
 
     @Override
     public boolean createEntity() {
+        //Create sql query
         String query = String.format("INSERT INTO %s (%s) VALUES(%s);",
-                entityName,
-                String.join(",", fields.keySet()),
+                entityName, String.join(",", fields.keySet()),
                 fields.values().stream()
                         .map(this::parseField)
                         .collect(Collectors.joining(", ")));
@@ -45,10 +47,12 @@ public class MysqlSerializer extends Serializer {
 
     @Override
     public boolean saveEntity(String... saveFields) {
+        //Validate if entity fields can be serialized
         Map<String, Field> validFields = validateFields(saveFields);
         if (validFields.isEmpty())
             throw new SerializationException("Unable to serialize "+ String.join(", ", saveFields));
 
+        //Create sql query
         String query = String.format("UPDATE %s SET %s WHERE %s=%s;",
                 entityName, validFields.entrySet().stream()
                         .map(entry -> entry.getKey() + "=" + parseField(entry.getValue()))
@@ -65,15 +69,32 @@ public class MysqlSerializer extends Serializer {
 
     @Override
     public Object getEntity() {
-        return getEntities().stream().findFirst().orElse(null);
+        //Create sql query
+        String query = String.format("SELECT *  FROM %s WHERE %s=%s;",
+                entityName, identifier, parseField(fields.get(identifier)));
+
+        try(PreparedStatement statement = Mysql.getConnection().prepareStatement(query)) {
+            try(ResultSet resultSet = statement.executeQuery()) {
+                if(resultSet.next()) {
+                    //Create a new instance
+                    Set<Object> values = Sets.newLinkedHashSet();
+                    for (Map.Entry<String, Field> entry : fields.entrySet()) {
+                        values.add(resultSet.getObject(entry.getKey(), entry.getValue().getType()));
+                    }
+
+                    return Reflexion.instance(super.entity.getClass(), values.toArray());
+                }
+                return null;
+            }
+        }catch (SQLException exception) {
+            throw new SerializationException(exception);
+        }
     }
 
-    @Override
-    public List<Object> getEntities() {
+    public Object[] getEntities(int from, int to) {
         List<Object> objects = Lists.newArrayList();
-        String query = String.format("SELECT *  FROM %s WHERE %s=%s;",
-                entityName, identifier,
-                parseField(fields.get(identifier)));
+        String query = String.format("SELECT *  FROM %s LIMIT %d,%d",
+                entityName, from, to);
 
         try(PreparedStatement statement = Mysql.getConnection().prepareStatement(query)) {
             try(ResultSet resultSet = statement.executeQuery()) {
@@ -86,10 +107,10 @@ public class MysqlSerializer extends Serializer {
 
                     objects.add(Reflexion.instance(super.entity.getClass(), values.toArray()));
                 }
-                return objects;
+                return objects.toArray();
             }
         }catch (SQLException exception) {
-            throw new es.brouse.auctionhouse.loader.serializer.SerializationException(exception);
+            throw new SerializationException(exception);
         }
     }
 
@@ -109,7 +130,7 @@ public class MysqlSerializer extends Serializer {
     private String parseField(Field field) {
         Object value = Reflexion.getValue(super.entity, field);
 
-        if (Reflexion.checkType(field, String.class)) {
+        if (Reflexion.checkType(field.getType(), String.class)) {
             return "'" + value + "'";
         }else {
             return value.toString();

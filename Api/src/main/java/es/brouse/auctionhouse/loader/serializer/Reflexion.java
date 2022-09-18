@@ -4,6 +4,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -22,53 +23,19 @@ public final class Reflexion {
     }
 
     /**
-     * Check if the given entity has present the given {@param annotation}
-     * @param entity entity to check for
-     * @param annotation annotation to check on entity
-     * @return if the entity has present the annotation
-     */
-    public static boolean isAnnotated(Class<?> entity, Class<? extends Annotation> annotation) {
-        return entity.isAnnotationPresent(annotation);
-    }
-
-    /**
-     * Check if the given field if instanceof one of the given {@param types}
-     * @param field field to check
-     * @param types types to look for
-     * @return if the field is instanceof one of the given types
-     */
-    public static boolean checkType(Field field, Class<?>[] types) {
-        return Arrays.stream(types).anyMatch(aClass -> checkType(field, aClass));
-    }
-
-    /**
      * Check if the given field if instanceof one the given {@param types}
-     * @param field field to check
+     * @param entity field to check
      * @param type type to look for
      * @return if the field is instanceof the given type
      */
-    public static boolean checkType(Field field, Class<?> type) {
-        return field.getType().isAssignableFrom(type);
+    public static boolean checkType(Class<?> entity, Class<?> type) {
+        return entity.isAssignableFrom(type);
     }
 
     /**
      * Get the annotation parameter from the given field that matches
      * with the given {@param annotation}
-     * @param field field to get the annotation from
-     * @param annotation annotation to find
-     * @return the found annotation
-     * @param <A> annotation type
-     */
-    public static  <A extends Annotation> A getAnnotation(Field field, Class<A> annotation) {
-        if (field.isAnnotationPresent(annotation))
-            return field.getAnnotation(annotation);
-        throw new ReflexionException("Field is not annotated with "+ annotation.getName());
-    }
-
-    /**
-     * Get the annotation parameter from the given entity that matches
-     * with the given {@param annotation}
-     * @param entity entity to get the annotation from
+     * @param entity to get the annotation from
      * @param annotation annotation to find
      * @return the found annotation
      * @param <A> annotation type
@@ -76,7 +43,7 @@ public final class Reflexion {
     public static  <A extends Annotation> A getAnnotation(Class<?> entity, Class<A> annotation) {
         if (entity.isAnnotationPresent(annotation))
             return entity.getAnnotation(annotation);
-        throw new ReflexionException("Field is not annotated with "+ annotation.getName());
+        throw new ReflexionException("Entity is not annotated with "+ annotation.getName());
     }
 
     /**
@@ -116,6 +83,40 @@ public final class Reflexion {
             return constructor.newInstance(args);
         } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
             throw new ReflexionException("Unable to instance class "+ entity.getSimpleName(), e);
+        }
+    }
+
+    /**
+     * Invoke a method from a specific class and make sure it will return the given {@param returnType}.
+     * If not it will throw a {@link SerializationException}
+     * @param entity entity to serialize
+     * @param name method name
+     * @param returnType return type of the mehtod
+     * @param args args for invoking the method
+     * @return the method invoking result
+     * @param <T> type of the return
+     */
+    public static <T> T invokeMethod(Class<?> entity, String name, Class<T> returnType, Object[] args) {
+        boolean accessible = false;
+        Method method =  null;
+
+        try {
+            //Try to get the method for the given name
+            method = entity.getMethod(name, Arrays.stream(args).map(Object::getClass).toArray(Class[]::new));
+
+            //Conditions to ensure the method is reade to be invoked
+            if (!method.isAccessible())
+                accessible = true;
+            if (checkType(method.getReturnType(), returnType))
+                throw new RuntimeException("This method doesn't return " + returnType.getSimpleName());
+
+            return returnType.cast(method.invoke(entity, args));
+        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException exception) {
+            throw new SerializationException(exception);
+        }finally {
+            //Make sure the method return to it original accessor
+            if (method != null && accessible)
+                method.setAccessible(false);
         }
     }
 }

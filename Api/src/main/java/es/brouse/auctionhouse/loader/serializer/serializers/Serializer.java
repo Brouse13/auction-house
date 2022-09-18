@@ -7,8 +7,7 @@ import es.brouse.auctionhouse.loader.serializer.Serializable;
 import es.brouse.auctionhouse.loader.serializer.SerializationException;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.List;
+import java.util.Arrays;
 import java.util.Map;
 
 public abstract class Serializer {
@@ -46,13 +45,6 @@ public abstract class Serializer {
     public abstract Object getEntity();
 
     /**
-     * Get all the entities from the database with the given identifier.
-     * @apiNote The entity only needs the {@link Serializable#identifier()} field
-     * @return the entities with the given id
-     */
-    public abstract List<Object> getEntities();
-
-    /**
      * Delete the given entity from the database with the given identifier.
      * @apiNote The entity only needs the {@link Serializable#identifier()} field
      * @return the operation status
@@ -81,24 +73,18 @@ public abstract class Serializer {
     private void loadFields() {
         //Get all the fields annotated with Serializable
         for (Field field : Reflexion.getFields(entity.getClass(), Serializable.class)) {
-            if (Reflexion.checkType(field, TYPES)) {
-                Serializable annotation = Reflexion.getAnnotation(field, Serializable.class);
+            if (Arrays.stream(TYPES).noneMatch(aClass -> Reflexion.checkType(field.getType(), aClass))) continue;
 
-                //Load identifier
-                if (annotation.identifier()) {
-                    if (this.identifier != null)
-                        throw new SerializationException("Class "+ this.entityName+ " has more than one identifier");
-                    else {
-                        if (Modifier.isFinal(field.getModifiers())) {
-                            this.identifier = field.getName();
-                        }else {
-                            throw new SerializationException("Identifier must be a final field");
-                        }
+            Serializable annotation = Reflexion.getAnnotation(field.getType(), Serializable.class);
 
-                    }
-                }
-                this.fields.put(("".equals(annotation.name())) ? field.getName() : annotation.name(), field);
+            //Load identifier
+            if (annotation.identifier()) {
+                if (this.identifier != null)
+                    throw new SerializationException("Class "+ this.entityName+ " has more than one identifier");
+                else
+                    this.identifier = field.getName();
             }
+            this.fields.put(("".equals(annotation.name())) ? field.getName() : annotation.name(), field);
         }
     }
 }
