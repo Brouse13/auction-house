@@ -90,10 +90,9 @@ public final class Reflexion {
      * @return the created entity
      * @param <T> entity to create
      */
-    public static <T> T instance(Class<T> entity, Object[] args) {
+    public static <T> T instance(Class<T> entity, Class<?>[] parameters, Object[] args) {
         try {
-            Constructor<T> constructor = entity.getConstructor(Arrays.stream(args)
-                    .map(Object::getClass).toArray(Class[]::new));
+            Constructor<T> constructor = entity.getConstructor(parameters);
             return constructor.newInstance(args);
         } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
             throw new RuntimeException(e);

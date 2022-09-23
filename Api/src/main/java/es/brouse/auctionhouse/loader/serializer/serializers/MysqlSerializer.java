@@ -82,7 +82,9 @@ public class MysqlSerializer extends Serializer {
                         values.add(resultSet.getObject(entry.getKey(), entry.getValue().getType()));
                     }
 
-                    return Reflexion.instance(super.entity.getClass(), values.toArray());
+                    return Reflexion.instance(super.entity.getClass(),
+                            Arrays.stream(values.toArray()).map(Object::getClass).toArray(Class[]::new),
+                            values.toArray());
                 }
                 return null;
             }
@@ -106,7 +108,9 @@ public class MysqlSerializer extends Serializer {
                         values.add(resultSet.getObject(entry.getKey(), entry.getValue().getType()));
                     }
 
-                    objects.add(Reflexion.instance(super.entity.getClass(), values.toArray()));
+                    objects.add(Reflexion.instance(super.entity.getClass(),
+                            Arrays.stream(values.toArray()).map(Object::getClass).toArray(Class[]::new),
+                            values.toArray()));
                 }
                 return objects.toArray();
             }

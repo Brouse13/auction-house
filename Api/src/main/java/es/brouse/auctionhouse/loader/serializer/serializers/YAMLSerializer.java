@@ -41,7 +41,9 @@ public class YAMLSerializer extends Serializer {
     @Override
     public Object getEntity() {
         if (section == null) return null;
-        return Reflexion.instance(entity.getClass(), Arrays.stream(getFields()).map(section::get).toArray());
+        Object[] args = Arrays.stream(getFields()).map(section::get).toArray();
+        return Reflexion.instance(entity.getClass(),
+                Arrays.stream(args).map(Object::getClass).toArray(Class[]::new), args);
     }
 
     @Override
@@ -54,7 +56,7 @@ public class YAMLSerializer extends Serializer {
         //Get all the keys from the storage
         List<String> keys = Lists.newArrayList(section.getKeys(false));
 
-        for (int i = from - 1; i < keys.size(); i++) {
+        for (int i = from; i < keys.size(); i++) {
             //Lambda expressions must use final in to get from external lists
             int finalI = i;
             if (i > to) break;
@@ -63,12 +65,14 @@ public class YAMLSerializer extends Serializer {
                 //Map all the fields from the entity on from the storage and instance it
                 Object[] args = Arrays.stream(getFields())
                         .map(field -> section.get(keys.get(finalI) + "." + field)).toArray();
-                objects.add(Reflexion.instance(entity.getClass(), args));
+                objects.add(Reflexion.instance(entity.getClass(),
+                        Arrays.stream(args).map(Object::getClass).toArray(Class[]::new), args));
             }catch (NullPointerException exception) {
                 //If we found any NullPointerException we stop the for
                 break;
             }
         }
+        objects.forEach(o -> System.out.println(o.getClass()));
         return objects.toArray();
     }
 
