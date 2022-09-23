@@ -91,10 +91,11 @@ public class MysqlSerializer extends Serializer {
         }
     }
 
+    @Override
     public Object[] getEntities(int from, int to) {
         List<Object> objects = Lists.newArrayList();
-        String query = String.format("SELECT *  FROM %s LIMIT %d,%d",
-                entityName, from, to);
+        String query = String.format("SELECT * FROM %s LIMIT %d,%d",
+                entityName, from - 1, to - 1);
 
         try(PreparedStatement statement = Mysql.getConnection().prepareStatement(query)) {
             try(ResultSet resultSet = statement.executeQuery()) {

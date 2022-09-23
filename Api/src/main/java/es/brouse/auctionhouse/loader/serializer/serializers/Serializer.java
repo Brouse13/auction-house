@@ -8,6 +8,7 @@ import es.brouse.auctionhouse.loader.serializer.SerializationException;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.Map;
 
 public abstract class Serializer {
@@ -45,6 +46,13 @@ public abstract class Serializer {
     public abstract Object getEntity();
 
     /**
+     * Get all the entities in a specific range from the database.
+     * @apiNote This method won't access to any field
+     * @return the entity with the given id
+     */
+    public abstract Object[] getEntities(int from, int to);
+
+    /**
      * Delete the given entity from the database with the given identifier.
      * @apiNote The entity only needs the {@link Serializable#identifier()} field
      * @return the operation status
@@ -64,7 +72,9 @@ public abstract class Serializer {
      */
     private void loadName() {
         Entity annotation = Reflexion.getAnnotation(entity.getClass(), Entity.class);
-        this.entityName = (!"".equals(annotation.name()) ? annotation.name() : entity.getClass().getSimpleName());
+        this.entityName = (!"".equals(annotation.name()) ?
+                annotation.name().toLowerCase(Locale.ROOT) :
+                entity.getClass().getSimpleName().toLowerCase(Locale.ROOT));
     }
 
     /**
@@ -75,7 +85,7 @@ public abstract class Serializer {
         for (Field field : Reflexion.getFields(entity.getClass(), Serializable.class)) {
             if (Arrays.stream(TYPES).noneMatch(aClass -> Reflexion.checkType(field.getType(), aClass))) continue;
 
-            Serializable annotation = Reflexion.getAnnotation(field.getType(), Serializable.class);
+            Serializable annotation = Reflexion.getAnnotation(field, Serializable.class);
 
             //Load identifier
             if (annotation.identifier()) {

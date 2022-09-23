@@ -47,6 +47,20 @@ public final class Reflexion {
     }
 
     /**
+     * Get the annotation parameter from the given field that matches
+     * with the given {@param annotation}
+     * @param field field to get the annotation from
+     * @param annotation annotation to find
+     * @return the found annotation
+     * @param <A> annotation type
+     */
+    public static  <A extends Annotation> A getAnnotation(Field field, Class<A> annotation) {
+        if (field.isAnnotationPresent(annotation))
+            return field.getAnnotation(annotation);
+        throw new ReflexionException("Field is not annotated with "+ annotation.getName());
+    }
+
+    /**
      * Get the value of the field
      * @param object object from where get the value
      * @param field field to get the value
@@ -82,35 +96,31 @@ public final class Reflexion {
                     .map(Object::getClass).toArray(Class[]::new));
             return constructor.newInstance(args);
         } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
-            throw new ReflexionException("Unable to instance class "+ entity.getSimpleName(), e);
+            throw new RuntimeException(e);
+            // throw new ReflexionException("Unable to instance class "+ entity.getSimpleName(), e);
         }
     }
 
     /**
-     * Invoke a method from a specific class and make sure it will return the given {@param returnType}.
-     * If not it will throw a {@link SerializationException}
+     * Invoke a method from a specific class. If not it will throw a {@link SerializationException}
      * @param entity entity to serialize
      * @param name method name
-     * @param returnType return type of the mehtod
      * @param args args for invoking the method
      * @return the method invoking result
-     * @param <T> type of the return
      */
-    public static <T> T invokeMethod(Class<?> entity, String name, Class<T> returnType, Object[] args) {
+    public static Object invokeMethod(Object entity, String name, Object... args) {
         boolean accessible = false;
         Method method =  null;
 
         try {
             //Try to get the method for the given name
-            method = entity.getMethod(name, Arrays.stream(args).map(Object::getClass).toArray(Class[]::new));
+            method = entity.getClass().getDeclaredMethod(name, Arrays.stream(args).map(Object::getClass).toArray(Class[]::new));
 
             //Conditions to ensure the method is reade to be invoked
             if (!method.isAccessible())
                 accessible = true;
-            if (checkType(method.getReturnType(), returnType))
-                throw new RuntimeException("This method doesn't return " + returnType.getSimpleName());
 
-            return returnType.cast(method.invoke(entity, args));
+            return method.invoke(entity, args);
         } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException exception) {
             throw new SerializationException(exception);
         }finally {

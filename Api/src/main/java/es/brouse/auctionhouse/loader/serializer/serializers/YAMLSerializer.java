@@ -22,15 +22,19 @@ public class YAMLSerializer extends Serializer {
 
     @Override
     public boolean createEntity() {
-        Arrays.stream(getFields()).forEach(fieldName -> section.set(fieldName, getValue.apply(fieldName)));
-        storage.save();
-        return storage.contains(Objects.requireNonNull(section.getCurrentPath()));
+        if (!section.contains(Objects.requireNonNull(section.getCurrentPath()))) {
+            Arrays.stream(getFields()).forEach(fieldName -> section.set(fieldName, getValue.apply(fieldName)));
+            storage.reload();
+            return true;
+        }
+        return false;
     }
 
     @Override
     public boolean saveEntity(String... fields) {
         Arrays.stream(fields).forEach(field -> section.set(field,
                 Reflexion.getValue(entity, super.fields.get(field))));
+        storage.reload();
         return true;
     }
 
@@ -40,22 +44,30 @@ public class YAMLSerializer extends Serializer {
         return Reflexion.instance(entity.getClass(), Arrays.stream(getFields()).map(section::get).toArray());
     }
 
+    @Override
     public Object[] getEntities(int from, int to) {
         ConfigurationSection section = storage.getConfigurationSection(entityName);
         List<Object> objects = Lists.newArrayList();
 
         if (section == null) return objects.toArray();
 
-        //I hope a file doesn't handle that amount of serialized objects
-        short i = 0;
-        for (String key : section.getKeys(false)) {
-            if (i >= from) {
-                Object[] args = Arrays.stream(getFields()).map(fields ->
-                    section.get(section.getCurrentPath() + "." + key)).toArray();
+        //Get all the keys from the storage
+        List<String> keys = Lists.newArrayList(section.getKeys(false));
+
+        for (int i = from - 1; i < keys.size(); i++) {
+            //Lambda expressions must use final in to get from external lists
+            int finalI = i;
+            if (i > to) break;
+
+            try {
+                //Map all the fields from the entity on from the storage and instance it
+                Object[] args = Arrays.stream(getFields())
+                        .map(field -> section.get(keys.get(finalI) + "." + field)).toArray();
                 objects.add(Reflexion.instance(entity.getClass(), args));
+            }catch (NullPointerException exception) {
+                //If we found any NullPointerException we stop the for
+                break;
             }
-            if (i < to) break;
-            i++;
         }
         return objects.toArray();
     }
