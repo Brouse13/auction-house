@@ -38,8 +38,8 @@ public class YamlConfig {
                 .displayName(Translator.getString("messages.sectiongui.next_button.name", getLang()))
                 .lore(Translator.getStringList("messages.sectiongui.next_button.lore", getLang())).build();
         previousButton = ItemBuilder.of(config.getDefEnum("ahgui.prev_button", Material.class, Material.ARROW))
-                .displayName(Translator.getString("messages.next_button.next_button.name", getLang()))
-                .lore(Translator.getStringList("messages.next_button.next_button.lore", getLang())).build();
+                .displayName(Translator.getString("messages.sectiongui.next_button.name", getLang()))
+                .lore(Translator.getStringList("messages.sectiongui.next_button.lore", getLang())).build();
 
     }
 }
