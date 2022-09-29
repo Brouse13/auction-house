@@ -1,9 +1,12 @@
 package es.brouse.auctionhouse.loader.utils;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.Getter;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 public class Pageable<T> {
     private final Map<Integer, List<T>> pages;
@@ -13,7 +16,7 @@ public class Pageable<T> {
 
     public Pageable(int pageSize) {
         this.pageSize = pageSize;
-        this.currentPage = 0;
+        this.currentPage = 1;
         this.pages = Maps.newHashMap();
     }
 
@@ -83,6 +86,6 @@ public class Pageable<T> {
      * @return the items on the given page
      */
     public List<T> getPage(int page) {
-        return pages.getOrDefault(page, null);
+        return pages.getOrDefault(page, Lists.newArrayList());
     }
 }

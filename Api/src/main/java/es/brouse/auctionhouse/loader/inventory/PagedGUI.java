@@ -27,7 +27,7 @@ public class PagedGUI extends Pageable<ItemStack> implements InventoryHolder {
     private int prevButtonSlot;
     private int nextButtonSlot;
 
-
+    //Class to manage in a PagedGUI inventory witch slots won't be moved
     @Getter private final SlotRestrictive slotRestrictive = new SlotRestrictive();
 
     /**
@@ -54,11 +54,11 @@ public class PagedGUI extends Pageable<ItemStack> implements InventoryHolder {
      * method isn't called the inventory won't have previous button
      * @param slot inventory slot
      */
-    public void setPrevButton(int slot) {
+    public void setPrevButton(int slot, ItemStack button) {
         if (prevButtonSlot != -1)
             removeButton(prevButtonSlot);
 
-        setButton(slot, prevButton());
+        setButton(slot, prevButton(button));
         prevButtonSlot = slot;
     }
 
@@ -67,11 +67,11 @@ public class PagedGUI extends Pageable<ItemStack> implements InventoryHolder {
      * method isn't called the inventory won't have next button
      * @param slot inventory slot
      */
-    public void setNextButton(int slot) {
+    public void setNextButton(int slot, ItemStack button) {
         if (nextButtonSlot != -1)
             removeButton(nextButtonSlot);
 
-        setButton(slot, nextButton());
+        setButton(slot, nextButton(button));
         nextButtonSlot = slot;
     }
 
@@ -135,7 +135,7 @@ public class PagedGUI extends Pageable<ItemStack> implements InventoryHolder {
         Set<Integer> slots = slotRestrictive.getSlots();
 
         if (!slotRestrictive.isRestrict())
-            for (int i = 0; i < size - 9; i++) slots.add(i);
+            for (int i = 0; i < size - 9; i++) slotRestrictive.addSlot(i);
 
         //Clear last previous page elements
         for (Integer slot : slots)
@@ -159,11 +159,12 @@ public class PagedGUI extends Pageable<ItemStack> implements InventoryHolder {
 
     /**
      * Get the previous button {@link GUIButton}
+     * @param button itemStack of the button
      * @return the GUI previous button
      */
-    public GUIButton prevButton() {
+    public GUIButton prevButton(ItemStack button) {
         return GUIButtonBuilder.create()
-                .button(new ItemStack(Material.ARROW))
+                .button(new ItemStack(button))
                 .clickEvent(event -> {
                     if (previousPage()) openPage(event.getWhoClicked());
                 }).build();
@@ -171,11 +172,12 @@ public class PagedGUI extends Pageable<ItemStack> implements InventoryHolder {
 
     /**
      * Get the previous button {@link GUIButton}
+     * @param button itemStack of the button
      * @return the GUI next button
      */
-    public GUIButton nextButton() {
+    public GUIButton nextButton(ItemStack button) {
         return GUIButtonBuilder.create()
-                .button(new ItemStack(Material.ARROW))
+                .button(button)
                 .clickEvent(event -> {
                     if (nextPage()) openPage(event.getWhoClicked());
                 }).build();

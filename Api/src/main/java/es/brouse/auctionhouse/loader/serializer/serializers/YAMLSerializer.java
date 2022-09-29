@@ -72,7 +72,6 @@ public class YAMLSerializer extends Serializer {
                 break;
             }
         }
-        objects.forEach(o -> System.out.println(o.getClass()));
         return objects.toArray();
     }
 
