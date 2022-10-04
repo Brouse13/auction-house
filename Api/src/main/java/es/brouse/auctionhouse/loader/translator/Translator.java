@@ -1,23 +1,26 @@
 package es.brouse.auctionhouse.loader.translator;
+
 import com.google.common.collect.Lists;
 import es.brouse.auctionhouse.loader.storage.YAML;
 import lombok.Getter;
 import org.bukkit.ChatColor;
 
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Translator {
+    private static Function<String, String> colorize = text ->
+            ChatColor.translateAlternateColorCodes('&', text);
+
     /**
      * Get from the messages file the current translation string
      * @param key translation key
      * @param lang translation language
      * @return the translated key
      */
-    public static String getString(String key, Lang lang) {
-        return ChatColor.translateAlternateColorCodes('&',
-                lang.getFile().getString(key, lang+ "."+ key));
+    public static String getString(String key, Lang lang, Object... args) {
+        return colorize.apply(ComponentManager.replace(lang.getFile().getString(key, lang+ "."+ key), args));
     }
 
     /**
@@ -26,9 +29,10 @@ public class Translator {
      * @param lang translation language
      * @return the translated key
      */
-    public static List<String> getStringList(String key, Lang lang) {
+    public static List<String> getStringList(String key, Lang lang, Object... args) {
         List<String> lines = lang.getFile().getStringList(key).stream()
-                .map(line -> ChatColor.translateAlternateColorCodes('&', line)).collect(Collectors.toList());
+                .map(line -> colorize.apply(ComponentManager.replace(line, args)))
+                .collect(Collectors.toList());
         return lines.isEmpty() ? Lists.newArrayList("[" + lang+ "." + key + "]") : lines;
     }
 
@@ -42,4 +46,5 @@ public class Translator {
             this.file = file;
         }
     }
+
 }
