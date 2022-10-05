@@ -2,12 +2,13 @@ package es.brouse.auctionhouse.loader.inventory;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import es.brouse.auctionhouse.loader.config.YamlConfig;
+import es.brouse.auctionhouse.loader.translator.Translator;
 import es.brouse.auctionhouse.loader.utils.Pageable;
 import es.brouse.auctionhouse.loader.utils.builders.GUIButtonBuilder;
 import lombok.Getter;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.Inventory;
@@ -18,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 public class PagedGUI extends Pageable<ItemStack> implements InventoryHolder {
-    private final String title;
+    @Getter private final String title;
     private final int size;
     private ItemStack background = new ItemStack(Material.AIR);
     private final Map<Integer, GUIButton> buttons = Maps.newHashMap();
@@ -34,11 +35,11 @@ public class PagedGUI extends Pageable<ItemStack> implements InventoryHolder {
     /**
      * Create a new PagedGUI with a given title and size
      * @param size inventory size
-     * @param name inventory title
+     * @param key inventory title
      */
-    public PagedGUI(int size, String name) {
+    public PagedGUI(int size, String key) {
         super(28);
-        this.title = ChatColor.translateAlternateColorCodes('&', name);
+        this.title = Translator.getString(key, new YamlConfig().getLang());
         this.size = size;
     }
 
@@ -110,8 +111,7 @@ public class PagedGUI extends Pageable<ItemStack> implements InventoryHolder {
     @Override
     public @NonNull Inventory getInventory() {
         //Create the inventory and handle '%page' translation
-        Inventory inventory = Bukkit.createInventory(this, size,
-                title.contains("%page%") ? title.replaceAll("%page%", String.valueOf(getCurrentPage())) : title);
+        Inventory inventory = Bukkit.createInventory(this, size, getTitle());
 
         //Set the inventory background material
         for (int i = 0; i < inventory.getSize(); i++) inventory.setItem(i, background);

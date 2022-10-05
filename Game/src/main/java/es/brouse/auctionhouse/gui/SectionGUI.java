@@ -15,8 +15,11 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Arrays;
 
 public class SectionGUI extends PagedGUI {
+    private final AHSection section;
     public SectionGUI(AHSection section) {
-        super(54, section.name()+ " - %page%");
+        super(54, "messages.sectiongui.title");
+        this.section = section;
+
         getSlotRestrictive().setRestrict(true);
         getSlotRestrictive().addRange(45, 53);
 
@@ -24,6 +27,12 @@ public class SectionGUI extends PagedGUI {
         setNextButton(53, AuctionHouse.getSettings().getNextButton());
 
         loadPages(0, getInventory().getSize() - 2);
+    }
+
+    @Override
+    public String getTitle() {
+        return Translator.getString("messages.sectiongui.title",
+                AuctionHouse.getSettings().getLang(), section, getCurrentPage());
     }
 
     private void loadPages(int from, int to) {

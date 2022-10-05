@@ -2,11 +2,12 @@ package es.brouse.auctionhouse.loader.inventory;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import es.brouse.auctionhouse.loader.config.YamlConfig;
+import es.brouse.auctionhouse.loader.translator.Translator;
 import es.brouse.auctionhouse.loader.utils.builders.ItemBuilder;
 import lombok.Getter;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.Inventory;
@@ -25,10 +26,10 @@ public class GUI implements InventoryHolder {
     /**
      * Create a new PagedGUI with a given title and size
      * @param size inventory size
-     * @param name inventory title
+     * @param key inventory title
      */
-    public GUI(int size, String name) {
-        this.title = ChatColor.translateAlternateColorCodes('&', name);
+    public GUI(int size, String key) {
+        this.title = Translator.getString(key, new YamlConfig().getLang());
         this.size = size;
         this.fixed = false;
         this.buttons = Maps.newHashMap();

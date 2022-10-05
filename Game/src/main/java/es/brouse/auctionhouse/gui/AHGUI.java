@@ -14,7 +14,7 @@ import java.util.function.Consumer;
 
 public class AHGUI extends GUI {
     public AHGUI() {
-        super(9, Translator.getString("messages.ah.title", AuctionHouse.getSettings().getLang()));
+        super(9, "messages.ah.title");
         setBackground(ItemBuilder.of(Material.LIGHT_GRAY_STAINED_GLASS_PANE).build());
         setFixed(true);
 
