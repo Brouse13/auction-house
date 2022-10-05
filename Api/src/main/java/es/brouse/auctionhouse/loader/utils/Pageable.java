@@ -29,7 +29,7 @@ public class Pageable<T> {
      * @throws IndexOutOfBoundsException If the 'currentPage' is the last page
      * @return If the page was moved successfully
      */
-    public boolean nextPage() throws IndexOutOfBoundsException {
+    public boolean nextPage() {
         if (!pages.containsKey(currentPage + 1)) return false;
 
         currentPage++;
@@ -38,13 +38,11 @@ public class Pageable<T> {
 
     /**
      * Move the 'currentPage' index to the next page.
-     * @throws IndexOutOfBoundsException If the 'currentPage' is the fist page
      * @return If the page was moved successfully
      */
-    public boolean previousPage() throws IndexOutOfBoundsException {
-        if (currentPage == 0) throw new IndexOutOfBoundsException();
-
-        currentPage++;
+    public boolean previousPage()  {
+        if (currentPage == 1) return false;
+        currentPage--;
         return true;
     }
 
