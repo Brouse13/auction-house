@@ -18,7 +18,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.List;
 import java.util.Map;
 
-public class PagedGUI extends Pageable<ItemStack> implements InventoryHolder {
+public class PagedGUI extends Pageable<GUIButton> implements InventoryHolder {
     @Getter private final String title;
     private final int size;
     private ItemStack background = new ItemStack(Material.AIR);
@@ -149,13 +149,11 @@ public class PagedGUI extends Pageable<ItemStack> implements InventoryHolder {
      * @param size inventory size
      *
      */
-    public void loadCurrentPage(int size, List<ItemStack> page) {
+    public void loadCurrentPage(int size, List<GUIButton> pages) {
         //Add the page content to the buttons
         for (int i = 0; i < size; i++) {
             try {
-                setButton(i, GUIButtonBuilder.create().button(page.get(i))
-                        .clickEvent(inventoryClickEvent ->
-                                inventoryClickEvent.setCancelled(true)).build());
+                setButton(i, pages.get(i));
             }catch (IndexOutOfBoundsException exception) {
                 //Stop filling when find exception
                 break;

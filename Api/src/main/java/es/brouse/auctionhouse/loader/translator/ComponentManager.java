@@ -1,7 +1,6 @@
 package es.brouse.auctionhouse.loader.translator;
 
 import com.google.common.collect.Sets;
-import es.brouse.auctionhouse.loader.utils.Logger;
 
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -22,7 +21,6 @@ public class ComponentManager {
                         .replaceAll("\\}", ""));
                 message = message.replace(replacer, String.valueOf(args[index]));
             }catch (Exception exception) {
-                Logger.log("Message '" + message + "' couldn't replace parameter '" + replacer + "'");
                 //Ignore that replacing
             }
         }

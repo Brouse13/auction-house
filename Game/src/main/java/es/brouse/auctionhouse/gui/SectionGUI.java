@@ -3,10 +3,12 @@ package es.brouse.auctionhouse.gui;
 import es.brouse.auctionhouse.AuctionHouse;
 import es.brouse.auctionhouse.loader.config.YamlConfig;
 import es.brouse.auctionhouse.loader.entities.AuctionHouseItem;
+import es.brouse.auctionhouse.loader.inventory.GUIButton;
 import es.brouse.auctionhouse.loader.inventory.PagedGUI;
 import es.brouse.auctionhouse.loader.serializer.SerializerManager;
 import es.brouse.auctionhouse.loader.serializer.serializers.Serializer;
 import es.brouse.auctionhouse.loader.translator.Translator;
+import es.brouse.auctionhouse.loader.utils.builders.GUIButtonBuilder;
 import es.brouse.auctionhouse.loader.utils.builders.ItemBuilder;
 import es.brouse.auctionhouse.section.AHSection;
 import org.bukkit.Material;
@@ -37,16 +39,26 @@ public class SectionGUI extends PagedGUI {
 
     private void loadPages(int from, int to) {
         Serializer serializer = SerializerManager.getActiveSerializer(new AuctionHouseItem());
-        YamlConfig config = new YamlConfig();
+
 
         //Map the object from the database to a AuctionHouseItem and then create each item
-        ItemStack[] itemStacks = Arrays.stream(serializer.getEntities(from, to))
+        GUIButton[] itemStacks = Arrays.stream(serializer.getEntities(from, to))
                 .map(item -> ((AuctionHouseItem) item))
-                .map(item -> ItemBuilder.of(Material.getMaterial(item.getMaterial()))
-                        .displayName(Translator.getString("messages.sectiongui.item.name", config.getLang(), item.getMaterial()))
-                        .lore(Translator.getStringList("messages.sectiongui.item.lore", config.getLang(), item.getOwner(), item.getPrice()))
-                        .build())
-                .toArray(ItemStack[]::new);
+                .map(this::createItemStack)
+                .map(itemStack -> GUIButtonBuilder.create().button(itemStack)
+                        .clickEvent(event -> {
+                            System.out.println("Test button");
+                            event.setCancelled(true);
+                        }).build())
+                .toArray(GUIButton[]::new);
         addPage(itemStacks);
+    }
+
+    public ItemStack createItemStack(AuctionHouseItem item) {
+        YamlConfig config = new YamlConfig();
+        return ItemBuilder.of(Material.getMaterial(item.getMaterial()))
+                .displayName(Translator.getString("messages.sectiongui.item.name", config.getLang(), item.getMaterial()))
+                .lore(Translator.getStringList("messages.sectiongui.item.lore", config.getLang(), item.getOwner(), item.getPrice()))
+                .build();
     }
 }
