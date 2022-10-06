@@ -12,6 +12,7 @@ import es.brouse.auctionhouse.loader.serializer.serializers.YAMLSerializer;
 import es.brouse.auctionhouse.loader.storage.Mysql;
 import es.brouse.auctionhouse.loader.storage.YAML;
 import es.brouse.auctionhouse.loader.utils.Logger;
+import hooks.VaultEconomy;
 import lombok.Getter;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -38,6 +39,9 @@ public class AuctionHouse extends JavaPlugin {
         //Register all the serializers
         SerializerManager.addSerializer("yaml", YAMLSerializer.class);
         SerializerManager.addSerializer("mysql", MysqlSerializer.class);
+
+        //Register Economy with the Vault
+        VaultEconomy.RegisterEconomy(this.getServer());
 
         //Register all listeners
         listeners().forEach(listener -> getServer().getPluginManager().registerEvents(listener, this));
