@@ -32,13 +32,15 @@ public class AuctionHouse extends JavaPlugin {
         //Setup config
         settings = new YamlConfig();
 
-        //Setup mysql if enabled
-        if(settings.isMysqlEnabled())
-            Mysql.init(settings);
-
         //Register all the serializers
         SerializerManager.addSerializer("yaml", YAMLSerializer.class);
         SerializerManager.addSerializer("mysql", MysqlSerializer.class);
+
+        //Setup mysql if enabled
+        if(settings.isMysqlEnabled()) {
+            Mysql.init(settings);
+            SerializerManager.setActive("mysql");
+        }
 
         //Register Economy with the Vault
         VaultEconomy.RegisterEconomy(this.getServer());
