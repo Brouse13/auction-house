@@ -10,9 +10,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity(name = "AuctionHouseItems")
 public class AuctionHouseItem {
-    @Serializable(name = "owner", identifier = true)
-    @Getter
-    private String owner;
+    @Serializable(name = "id", identifier = true)
+    @Getter private String id;
+
+    @Serializable(name = "owner")
+    @Getter private String owner;
+
+    @Serializable(name = "last_better")
+    @Getter private String last_better;
 
     @Serializable(name = "material")
     @Getter private String material;
