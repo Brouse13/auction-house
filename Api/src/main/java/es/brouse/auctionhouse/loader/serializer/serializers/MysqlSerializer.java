@@ -8,7 +8,10 @@ import es.brouse.auctionhouse.loader.storage.Mysql;
 import es.brouse.auctionhouse.loader.utils.Logger;
 
 import java.lang.reflect.Field;
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -149,12 +152,12 @@ public class MysqlSerializer extends Serializer {
     }
 
     private void createTable() {
-        String sql = String.format("CREATE TABLE IF NOT EXISTS %s (%s);",
+        String query = String.format("CREATE TABLE IF NOT EXISTS %s (%s);",
                 entityName, fields.keySet().stream()
                         .map(s -> s + " " + equivalence.get(fields.get(s).getType()))
                         .collect(Collectors.joining(", ")));
-        try(Connection connection = Mysql.getConnection()) {
-            connection.prepareStatement(sql).executeUpdate();
+        try (PreparedStatement statement = Mysql.getConnection().prepareStatement(query)) {
+            statement.executeUpdate();
         }catch (SQLException exception) {
             Logger.error(exception.getMessage());
         }
