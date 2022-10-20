@@ -1,9 +1,9 @@
 package es.brouse.auctionhouse.gui;
 
 import es.brouse.auctionhouse.AuctionHouse;
-import es.brouse.auctionhouse.loader.entities.AHSection;
-import es.brouse.auctionhouse.loader.inventory.PagedGUI;
-import es.brouse.auctionhouse.loader.translator.Translator;
+import es.brouse.auctionhouse.entities.AHSection;
+import es.brouse.auctionhouse.inventory.PagedGUI;
+import es.brouse.auctionhouse.translator.Translator;
 
 public class SectionGUI extends PagedGUI {
     private final AHSection section;

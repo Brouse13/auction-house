@@ -1,8 +1,8 @@
 package es.brouse.auctionhouse.gui;
 
-import es.brouse.auctionhouse.loader.inventory.GUI;
-import es.brouse.auctionhouse.loader.utils.builders.GUIButtonBuilder;
-import es.brouse.auctionhouse.loader.utils.builders.ItemBuilder;
+import es.brouse.auctionhouse.inventory.GUI;
+import es.brouse.auctionhouse.utils.builders.GUIButtonBuilder;
+import es.brouse.auctionhouse.utils.builders.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 

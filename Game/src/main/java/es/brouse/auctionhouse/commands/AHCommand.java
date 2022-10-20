@@ -1,7 +1,6 @@
 package es.brouse.auctionhouse.commands;
 
 import es.brouse.auctionhouse.gui.AHGUI;
-import es.brouse.auctionhouse.loader.commands.PlayerCommand;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

@@ -1,12 +1,12 @@
 package es.brouse.auctionhouse.gui;
 
 import es.brouse.auctionhouse.AuctionHouse;
-import es.brouse.auctionhouse.loader.config.YamlConfig;
-import es.brouse.auctionhouse.loader.entities.AHSection;
-import es.brouse.auctionhouse.loader.inventory.GUIButton;
-import es.brouse.auctionhouse.loader.translator.Translator;
-import es.brouse.auctionhouse.loader.utils.builders.GUIButtonBuilder;
-import es.brouse.auctionhouse.loader.utils.builders.ItemBuilder;
+import es.brouse.auctionhouse.config.YamlConfig;
+import es.brouse.auctionhouse.entities.AHSection;
+import es.brouse.auctionhouse.inventory.GUIButton;
+import es.brouse.auctionhouse.translator.Translator;
+import es.brouse.auctionhouse.utils.builders.GUIButtonBuilder;
+import es.brouse.auctionhouse.utils.builders.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
