@@ -1,4 +1,7 @@
-package es.brouse.auctionhouse.loader.serializer;
+package es.brouse.auctionhouse.loader.serialize;
+
+import es.brouse.auctionhouse.loader.exceptions.ReflexionException;
+import es.brouse.auctionhouse.loader.exceptions.SerializationException;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
@@ -47,20 +50,6 @@ public final class Reflexion {
     }
 
     /**
-     * Get the annotation parameter from the given field that matches
-     * with the given {@param annotation}
-     * @param field field to get the annotation from
-     * @param annotation annotation to find
-     * @return the found annotation
-     * @param <A> annotation type
-     */
-    public static  <A extends Annotation> A getAnnotation(Field field, Class<A> annotation) {
-        if (field.isAnnotationPresent(annotation))
-            return field.getAnnotation(annotation);
-        throw new ReflexionException("Field is not annotated with "+ annotation.getName());
-    }
-
-    /**
      * Get the value of the field
      * @param object object from where get the value
      * @param field field to get the value
@@ -83,8 +72,6 @@ public final class Reflexion {
 
     /**
      * Create a new instance of the given entity with the given {@param args}.
-     * @apiNote This method will invoke a constructor with all the
-     * {@link Serializable} fields in desc order.
      * @param entity entity to instantiate
      * @param args args required for the @AllArgsConstructor
      * @return the created entity
@@ -95,8 +82,7 @@ public final class Reflexion {
             Constructor<T> constructor = entity.getConstructor(parameters);
             return constructor.newInstance(args);
         } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-            // throw new ReflexionException("Unable to instance class "+ entity.getSimpleName(), e);
+            throw new ReflexionException("Unable to instance class "+ entity.getSimpleName(), e);
         }
     }
 

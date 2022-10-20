@@ -31,7 +31,7 @@ public class SectionButtons {
                 .lore(Translator.getStringList("messages.sectiongui.item.lore", config.getLang(),
                         item.getOwner(), item.getPrice())).build();
         //Set the id to recognize the AuctionHouseItem
-        NBTHelper.setKey(itemStack, "bet_id", item.getId());
+        NBTHelper.setKey(itemStack, "bet_id", item.getIdentifier());
 
         return GUIButtonBuilder.create().button(itemStack).clickEvent(event).build();
     }

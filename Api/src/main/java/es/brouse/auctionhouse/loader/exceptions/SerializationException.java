@@ -1,4 +1,4 @@
-package es.brouse.auctionhouse.loader.serializer;
+package es.brouse.auctionhouse.loader.exceptions;
 
 public class SerializationException extends RuntimeException {
     public SerializationException() {

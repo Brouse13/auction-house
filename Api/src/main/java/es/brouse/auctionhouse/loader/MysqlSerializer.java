@@ -1,22 +1,41 @@
-package es.brouse.auctionhouse.loader.serializer.serializers;
+package es.brouse.auctionhouse.loader;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
-import es.brouse.auctionhouse.loader.serializer.Reflexion;
-import es.brouse.auctionhouse.loader.serializer.SerializationException;
-import es.brouse.auctionhouse.loader.storage.Mysql;
-import es.brouse.auctionhouse.loader.utils.Logger;
 
-import java.lang.reflect.Field;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import es.brouse.auctionhouse.loader.serialize.Entity;
+import es.brouse.auctionhouse.loader.serialize.serializers.Serializer;
+
+import java.util.List;
 
 public class MysqlSerializer extends Serializer {
+    public MysqlSerializer(Entity entity) {
+        super(entity);
+    }
+
+    @Override
+    public boolean existsEntity() {
+        return false;
+    }
+
+    @Override
+    public boolean saveEntity() {
+        return false;
+    }
+
+    @Override
+    public <T extends Entity> T getEntity(T entity) {
+        return null;
+    }
+
+    @Override
+    public <T extends Entity> List<T> getEntities(T entity, int from, int to) {
+        return null;
+    }
+
+    @Override
+    public boolean deleteEntity() {
+        return false;
+    }
+    /*
     private final HashMap<Class<?>, String> equivalence = new HashMap<>();
 
     public MysqlSerializer(Object entity) {
@@ -162,4 +181,5 @@ public class MysqlSerializer extends Serializer {
             Logger.error(exception.getMessage());
         }
     }
+     */
 }

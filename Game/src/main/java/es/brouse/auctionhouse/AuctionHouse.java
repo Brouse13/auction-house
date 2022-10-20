@@ -6,9 +6,6 @@ import es.brouse.auctionhouse.loader.commands.BaseCommand;
 import es.brouse.auctionhouse.loader.commands.CommandRegister;
 import es.brouse.auctionhouse.loader.config.YamlConfig;
 import es.brouse.auctionhouse.loader.inventory.InventoryController;
-import es.brouse.auctionhouse.loader.serializer.SerializerManager;
-import es.brouse.auctionhouse.loader.serializer.serializers.MysqlSerializer;
-import es.brouse.auctionhouse.loader.serializer.serializers.YAMLSerializer;
 import es.brouse.auctionhouse.loader.storage.Mysql;
 import es.brouse.auctionhouse.loader.storage.YAML;
 import es.brouse.auctionhouse.loader.utils.Logger;
@@ -32,14 +29,11 @@ public class AuctionHouse extends JavaPlugin {
         //Setup config
         settings = new YamlConfig();
 
-        //Register all the serializers
-        SerializerManager.addSerializer("yaml", YAMLSerializer.class);
-        SerializerManager.addSerializer("mysql", MysqlSerializer.class);
-
         //Setup mysql if enabled
         if(settings.isMysqlEnabled()) {
             Mysql.init(settings);
-            SerializerManager.setActive("mysql");
+            //TODO set the active serializer to sql when it's enabled
+            //SerializerManager.setActive("mysql");
         }
 
         //Register Economy with the Vault

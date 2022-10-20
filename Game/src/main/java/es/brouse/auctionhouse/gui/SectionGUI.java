@@ -2,14 +2,8 @@ package es.brouse.auctionhouse.gui;
 
 import es.brouse.auctionhouse.AuctionHouse;
 import es.brouse.auctionhouse.loader.entities.AHSection;
-import es.brouse.auctionhouse.loader.entities.AuctionHouseItem;
-import es.brouse.auctionhouse.loader.inventory.GUIButton;
 import es.brouse.auctionhouse.loader.inventory.PagedGUI;
-import es.brouse.auctionhouse.loader.serializer.SerializerManager;
-import es.brouse.auctionhouse.loader.serializer.serializers.Serializer;
 import es.brouse.auctionhouse.loader.translator.Translator;
-
-import java.util.Arrays;
 
 public class SectionGUI extends PagedGUI {
     private final AHSection section;
@@ -33,7 +27,9 @@ public class SectionGUI extends PagedGUI {
     }
 
     private void loadPages(int from, int to) {
-        Serializer serializer = SerializerManager.getActiveSerializer(new AuctionHouseItem());
+        //TODO Implement the Serializer#getEntiteies()
+        /*
+        Serializer serializer = EntitySerializer.getSerializer(new AuctionHouseItem());
 
         //Map the object from the database to a AuctionHouseItem and then create each item
         GUIButton[] itemStacks = Arrays.stream(serializer.getEntities(from, to))
@@ -43,5 +39,6 @@ public class SectionGUI extends PagedGUI {
                     event.setCancelled(true);
                 })).toArray(GUIButton[]::new);
         addPage(itemStacks);
+         */
     }
 }
