@@ -8,6 +8,8 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 public class YamlConfig {
+    @Getter private final YAML config = new YAML("config", false);
+
     //LANG
     @Getter private final Translator.Lang lang;
 
@@ -18,15 +20,12 @@ public class YamlConfig {
     @Getter private final String password;
 
     //GUI
-    @Getter private final ItemStack nextButton;
-    @Getter private final ItemStack previousButton;
+    @Getter private final ItemStack nextButton, previousButton;
 
     /**
      * Creates the default config file
      */
     public YamlConfig() {
-        YAML config = new YAML("config", false);
-
         lang = config.getDefEnum("config.lang", Translator.Lang.class, Translator.Lang.en_US);
 
         isMysqlEnabled = config.getBoolean("config.mysql.enabled", false);
@@ -40,6 +39,5 @@ public class YamlConfig {
         previousButton = ItemBuilder.of(config.getDefEnum("ahgui.prev_button", Material.class, Material.ARROW))
                 .displayName(Translator.getString("messages.sectiongui.prev_button.name", getLang()))
                 .lore(Translator.getStringList("messages.sectiongui.prev_button.lore", getLang())).build();
-
     }
 }
