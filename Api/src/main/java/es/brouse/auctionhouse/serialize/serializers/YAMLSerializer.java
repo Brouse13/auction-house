@@ -6,69 +6,65 @@ import es.brouse.auctionhouse.serialize.WrapperStorage;
 import es.brouse.auctionhouse.serialize.mapper.EntityMapper;
 import es.brouse.auctionhouse.serialize.mapper.EntityReader;
 import es.brouse.auctionhouse.storage.YAML;
-import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class YAMLSerializer extends Serializer {
+public class YAMLSerializer<T extends Entity> extends Serializer<T> {
     private final YAML yaml;
-    private final ConfigurationSection storageSection;
+    private final String key = entity.getName() + "." + entity.getIdentifier();
 
-    public YAMLSerializer(Entity entity) {
+
+    public YAMLSerializer(T entity) {
         super(entity);
         yaml = new YAML("storage/" + entity.getName(), false);
-        storageSection = yaml.createSection(entity.getName());
     }
 
     @Override
     public boolean existsEntity() {
         //Check if the identifier is present on the storage, os always a String
-        System.out.println(storageSection);
-        return storageSection.contains(String.valueOf(mapper.get("_id")));
+        return yaml.contains(entity.getName() + "." + mapper.get("_id"));
     }
 
     @Override
     public boolean saveEntity() {
-        mapper.forEach((s, o) -> storageSection.set(entity.getIdentifier() + "." + s, o));
+        mapper.forEach((s, o) -> yaml.set(key + "." + s, o));
         yaml.reload();
         return true;
     }
 
     @Override
-    public <T extends Entity> T getEntity(T entity) {
+    public T getEntity() {
         if (!existsEntity()) return null;
 
-        EntityMapper<T> entityMapper = new EntityMapper<T>(entity);
+        EntityWrapper<T> wrapper = WrapperStorage.getWrapper(entity);
+        EntityMapper<T> entityMapper = new EntityMapper<>(entity);
 
-        //Add all the keys of the section into the mapper from the identifier
-        storageSection.getConfigurationSection(entity.getIdentifier()).getKeys(false).forEach(s -> {
-            entityMapper.set(entity.getIdentifier(), storageSection.get(entity.getIdentifier() + "." + s));
-        });
+        yaml.getConfigurationSection(key).getKeys(false).forEach(s -> entityMapper.set(s, yaml.get(key+ "." + s)));
 
-        //Return the entity mapped
-        return WrapperStorage.getWrapper(entity).mapEntity(new EntityReader(entityMapper.map()));
+        return wrapper.mapEntity(new EntityReader(entityMapper.map()));
     }
 
     @Override
-    public <T extends Entity> List<T> getEntities(T entity, int from, int to) {
-        if (!existsEntity() || !WrapperStorage.isWrapped(entity.getClass())) return null;
+    public List<T> getEntities(int from, int to) {
+        if (!WrapperStorage.isWrapped(entity.getClass())) return null;
 
-        //Loop only throw the entities queried
-        String[] keys = storageSection.getKeys(false).toArray(new String[0]);
-        keys = Arrays.copyOfRange(keys, from, to);
-
+        //Initialization of return list and Entity wrapper
         List<T> entities = new ArrayList<>();
         EntityWrapper<T> wrapper = WrapperStorage.getWrapper(entity);
 
-        for (String key : keys) {
+        //Loop only throw the entities queried we call Math#min() to avoid NullPointerException
+        String[] entityKeys = yaml.getConfigurationSection(entity.getName()).getKeys(false).toArray(new String[0]);
+        entityKeys = Arrays.copyOfRange(entityKeys, from, Math.min(to, entityKeys.length));
+
+        for (String entityId : entityKeys) {
+            //Create mapper to store entity values
             EntityMapper<T> entityMapper = new EntityMapper<>(entity);
 
             //Add all the keys of the section into the mapper
-            storageSection.getConfigurationSection(key).getKeys(false).forEach(s -> {
-                entityMapper.set(key, storageSection.get(key + "." + s));
-            });
+            yaml.getConfigurationSection(entity.getName() + "." + entityId).getKeys(false).forEach(s ->
+                entityMapper.set(s, yaml.get(entity.getName() + "." + entityId + "." + s)));
 
             //Add the entity from the wrapper
             entities.add(wrapper.mapEntity(new EntityReader(entityMapper.map())));
@@ -79,7 +75,7 @@ public class YAMLSerializer extends Serializer {
 
     @Override
     public boolean deleteEntity() {
-        storageSection.set(entity.getIdentifier(), null);
+        yaml.set(key, null);
         yaml.reload();
         return true;
     }
