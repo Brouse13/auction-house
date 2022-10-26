@@ -59,7 +59,7 @@ public class BetButtons {
     public static GUIButton closeInventory(Consumer<InventoryClickEvent> event) {
         return GUIButtonBuilder.create().button(ItemBuilder.of(Material.BARRIER)
                         .displayName(Translator.getString("messages.betgui.close.name", config.getLang()))
-                        .lore(Translator.getStringList("messages.betgui.close.name", config.getLang()))
+                        .lore(Translator.getStringList("messages.betgui.close.lore", config.getLang()))
                         .build()).clickEvent(event).build();
     }
 
