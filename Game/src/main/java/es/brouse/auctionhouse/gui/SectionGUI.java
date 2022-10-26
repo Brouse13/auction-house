@@ -2,7 +2,11 @@ package es.brouse.auctionhouse.gui;
 
 import es.brouse.auctionhouse.AuctionHouse;
 import es.brouse.auctionhouse.entities.AHSection;
+import es.brouse.auctionhouse.entities.AuctionHouseItem;
+import es.brouse.auctionhouse.inventory.GUIButton;
 import es.brouse.auctionhouse.inventory.PagedGUI;
+import es.brouse.auctionhouse.serialize.EntitySerializer;
+import es.brouse.auctionhouse.serialize.serializers.Serializer;
 import es.brouse.auctionhouse.translator.Translator;
 
 public class SectionGUI extends PagedGUI {
@@ -27,18 +31,15 @@ public class SectionGUI extends PagedGUI {
     }
 
     private void loadPages(int from, int to) {
-        //TODO Implement the Serializer#getEntiteies()
-        /*
-        Serializer serializer = EntitySerializer.getSerializer(new AuctionHouseItem());
+        //Create a serializer to get entities from the database
+        Serializer<AuctionHouseItem> serializer = EntitySerializer.getSerializer(AuctionHouseItem.builder().build());
 
-        //Map the object from the database to a AuctionHouseItem and then create each item
-        GUIButton[] itemStacks = Arrays.stream(serializer.getEntities(from, to))
-                .map(item -> ((AuctionHouseItem) item))
-                .map(item-> SectionButtons.sectionButton(item, event -> {
+        //Map each entry into a button of the inventory
+        GUIButton[] guiButtons = serializer.getEntities(from, to).stream()
+                .map(item -> SectionButtons.sectionButton(item, event -> {
                     event.getWhoClicked().openInventory(new BetGUI(event.getCurrentItem()).getInventory());
                     event.setCancelled(true);
                 })).toArray(GUIButton[]::new);
-        addPage(itemStacks);
-         */
+        addPage(guiButtons);
     }
 }
