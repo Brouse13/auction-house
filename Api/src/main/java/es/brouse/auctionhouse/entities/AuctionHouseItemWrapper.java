@@ -8,6 +8,7 @@ public class AuctionHouseItemWrapper implements EntityWrapper<AuctionHouseItem> 
     @Override
     public AuctionHouseItem mapEntity(EntityReader reader) {
         return AuctionHouseItem.builder()
+                .identifier(reader.getString("_id"))
                 .owner(reader.getString("owner"))
                 .last_better(reader.getString("last_better"))
                 .material(reader.getString("material"))
