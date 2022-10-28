@@ -39,7 +39,7 @@ public class YAMLSerializer<T extends Entity> extends Serializer<T> {
         if (!existsEntity()) return null;
 
         EntityWrapper<T> wrapper = WrapperStorage.getWrapper(entity);
-        EntityMapper<T> entityMapper = new EntityMapper<>(entity);
+        EntityMapper<T> entityMapper = new EntityMapper<>(entity).set("_id", entity.getIdentifier());
 
         yaml.getConfigurationSection(key).getKeys(false).forEach(s -> entityMapper.set(s, yaml.get(key+ "." + s)));
 
@@ -59,8 +59,8 @@ public class YAMLSerializer<T extends Entity> extends Serializer<T> {
         entityKeys = Arrays.copyOfRange(entityKeys, from, Math.min(to, entityKeys.length));
 
         for (String entityId : entityKeys) {
-            //Create mapper to store entity values
-            EntityMapper<T> entityMapper = new EntityMapper<>(entity);
+            //Create mapper to store entity values with the initial _id
+            EntityMapper<T> entityMapper = new EntityMapper<>(entity).set("_id", entityId);
 
             //Add all the keys of the section into the mapper
             yaml.getConfigurationSection(entity.getName() + "." + entityId).getKeys(false).forEach(s ->

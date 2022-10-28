@@ -72,7 +72,6 @@ public class EntityMapper<T extends Entity> {
     }
 
     public Map<String, Object> map() {
-        set("_id", object.getIdentifier());
         return entity;
     }
 }
