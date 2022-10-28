@@ -1,89 +1,65 @@
 package es.brouse.auctionhouse.utils;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import lombok.Getter;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
-public class Pageable<T> {
-    private final Map<Integer, List<T>> pages;
-    private final int pageSize;
-    @Getter
-    private int currentPage;
-
-    public Pageable(int pageSize) {
-        this.pageSize = pageSize;
-        this.currentPage = 1;
-        this.pages = Maps.newHashMap();
-    }
-
-    public Pageable() {
-        this(-1);
-    }
+public interface Pageable<T> {
 
     /**
      * Move the 'currentPage' index to the previous page.
      * @throws IndexOutOfBoundsException If the 'currentPage' is the last page
      * @return If the page was moved successfully
      */
-    public boolean nextPage() {
-        if (!pages.containsKey(currentPage + 1)) return false;
-
-        currentPage++;
-        return true;
-    }
+    boolean nextPage();
 
     /**
      * Move the 'currentPage' index to the next page.
      * @return If the page was moved successfully
      */
-    public boolean previousPage()  {
-        if (currentPage == 1) return false;
-        currentPage--;
-        return true;
-    }
+    boolean previousPage();
 
     /**
-     * Add a new Page to the Pageable.
-     * If the {@param elements} is higher than 'maxAmount'
-     * the page won't be created.
-     * @param elements Elements to add
-     * @return If the page was added
+     * Create a new page with index {@param page} and set it's content to
+     * {@param elements}. If there's already another page with the same index
+     * it will be overwritten.
+     * @param pageIndex index of the page
+     * @param content Elements to add
      */
-    @SafeVarargs
-    public final boolean addPage(T... elements) {
-        if (pageSize == -1 || elements.length <= pageSize) {
-            pages.put(pages.size() + 1, Arrays.asList(elements));
-            return true;
-        }
-        return false;
-    }
+    void addPage(int pageIndex, T[] content);
 
     /**
      * Remove the page on the specific index.
      * If the page is being used, it will cancel
      * the remove action.
-     * @param index index to remove
+     * @param pageIndex index to remove
      * @return If the page was removed
      */
-    public boolean removePage(int index) {
-        if (currentPage != index) {
-            pages.remove(index);
-            return true;
-        }
-        return false;
-    }
+    boolean removePage(int pageIndex);
 
     /**
      * Get the items on the given page. If the page doesn't
      * exist, it will return null
-     * @param page page to get the items
+     * @param pageIndex page to get the items
      * @return the items on the given page
      */
-    public List<T> getPage(int page) {
-        return pages.getOrDefault(page, Lists.newArrayList());
+    Page<T> getPage(int pageIndex);
+
+    class Page<T> {
+        private final Map<Integer, T> entries = Maps.newHashMap();
+
+        @SafeVarargs
+        public Page(int size, T... element) {
+            for (int i = 0; i < element.length; i++) {
+                if (i <= size) {
+                    entries.put(i, element[i]);
+                }
+            }
+        }
+
+        public Map<Integer, T> getEntries() {
+            return new HashMap<>(entries);
+        }
     }
 }

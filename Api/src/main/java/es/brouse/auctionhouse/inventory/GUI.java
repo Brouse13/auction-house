@@ -17,9 +17,9 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Map;
 
 public class GUI implements InventoryHolder {
-    @Getter private final String title;
-    @Getter private final int size;
-    @Getter private boolean fixed;
+    @Getter protected final String title;
+    protected final int size;
+    protected boolean fixed;
     private ItemStack background;
     private final Map<Integer, GUIButton> buttons;
 
@@ -59,7 +59,11 @@ public class GUI implements InventoryHolder {
      * @param button button to set
      */
     public void setButton(int slot, GUIButton button) {
-        buttons.put(slot, button);
+        try {
+            buttons.put(slot, button);
+        }catch (Exception exception) {
+            //Ignore if you can't put the item
+        }
     }
 
     /**
@@ -81,22 +85,22 @@ public class GUI implements InventoryHolder {
     @Override
     public @NonNull Inventory getInventory() {
         //Create the inventory
-        Inventory inventory = Bukkit.createInventory(this, size, title);
+        Inventory inventory = Bukkit.createInventory(this, size, getTitle());
 
         //Set the inventory background material
         for (int i = 0; i < inventory.getSize(); i++) inventory.setItem(i, background);
 
         //Add the buttons to the GUI
         buttons.forEach((slot, button) -> inventory.setItem(slot, button.getButton()));
-
         return inventory;
+
     }
 
     /**
      * Open the currentPage to the {@param holder}
      * @param holder HumanEntity that click the inventory
      */
-    private void openPage(HumanEntity holder) {
+    public void refreshPage(HumanEntity holder) {
         holder.closeInventory();
         holder.openInventory(getInventory());
     }

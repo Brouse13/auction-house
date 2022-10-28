@@ -4,6 +4,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
+import java.util.Map;
+
 public class InventoryController implements Listener {
 
     @EventHandler(ignoreCancelled = true)
@@ -13,7 +15,7 @@ public class InventoryController implements Listener {
 
         GUI holder = (GUI) event.getInventory().getHolder();
 
-        if (holder.isFixed()) event.setCancelled(true);
+        if (holder.fixed) event.setCancelled(true);
 
         if (holder.getButtons().containsKey(event.getSlot()))
             holder.getButtons().get(event.getSlot()).clickEvent().accept(event);
@@ -24,15 +26,16 @@ public class InventoryController implements Listener {
         if (event.getInventory().getHolder() == null) return;
         if (!(event.getInventory().getHolder() instanceof PagedGUI)) return;
 
-        PagedGUI holder = (PagedGUI) event.getInventory().getHolder();
+        PagedGUI holder = ((PagedGUI) event.getInventory().getHolder());
 
-        SlotRestrictive slotRestrictive = holder.getSlotRestrictive();
+        SlotRestrictive slotRestrictive = holder.slotRestrictive;
         if (slotRestrictive.isRestrict())
             if (slotRestrictive.getSlots().contains(event.getSlot()))
                 event.setCancelled(true);
 
-        GUIButton button = holder.getButtons().get(event.getSlot());
-        if (button != null)
-            button.clickEvent().accept(event);
+        Map<Integer, GUIButton> entries = holder.getPage(holder.size).getEntries();
+        if (entries.containsKey(event.getSlot())) {
+            entries.get(event.getSlot()).clickEvent().accept(event);
+        }
     }
 }
