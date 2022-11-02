@@ -12,7 +12,7 @@ public class AuctionHouseItemWrapper implements EntityWrapper<AuctionHouseItem> 
                 .owner(reader.getString("owner"))
                 .last_better(reader.getString("last_better"))
                 .material(reader.getString("material"))
-                .price(reader.getInteger("price"))
+                .price(reader.getDouble("price"))
                 .build();
     }
 

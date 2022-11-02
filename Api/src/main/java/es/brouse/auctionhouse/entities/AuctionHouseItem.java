@@ -16,7 +16,7 @@ public class AuctionHouseItem implements Entity {
 
     @Getter private String material;
 
-    @Getter private Integer price;
+    @Getter private Double price;
 
     @Override
     public String getName() {
