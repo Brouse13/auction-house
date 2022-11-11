@@ -34,7 +34,7 @@ public class NBTHelper {
      * @return if the item has NBT
      */
     public static boolean hasNBT(ItemStack itemStack) {
-        return getMeta(itemStack).getPersistentDataContainer().getKeys().isEmpty();
+        return !getMeta(itemStack).getPersistentDataContainer().getKeys().isEmpty();
     }
 
     /**
