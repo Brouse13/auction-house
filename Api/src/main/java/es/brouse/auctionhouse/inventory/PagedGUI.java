@@ -47,7 +47,6 @@ public class PagedGUI extends GUI implements InventoryHolder, Pageable<GUIButton
 
     @Override
     public void addPage(int pageIndex, GUIButton[] page) {
-        System.out.println("Created page " + pageIndex);
         pages.put(pageIndex, new Page<>(super.size - slotRestrictive.getSlots().size(), page));
     }
 

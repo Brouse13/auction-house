@@ -47,7 +47,6 @@ public class SectionGUI extends PagedGUI {
     }
 
     private void loadPage(int page) {
-        System.out.println("Loading page " + page);
         //Before asking the database for the items let's check if they have been stored
         GUIButton[] buttons = getPage(page).getEntries().values().toArray(new GUIButton[0]);
 
@@ -55,7 +54,6 @@ public class SectionGUI extends PagedGUI {
             //We subtract one to the page and slotRestrictive to the size
             int size = super.size - slotRestrictive.getSlots().size();
 
-            System.out.println("Loading from database [" + ((page - 1) * size) + " " + (page * size - 1) + "]");
             //If pageable is empty let's ask the DB
             Serializer<AuctionHouseItem> serializer = EntitySerializer.getSerializer(AuctionHouseItem.builder().build());
 
@@ -76,8 +74,5 @@ public class SectionGUI extends PagedGUI {
             //Add items to the inventory buttons and load the next page if possible
             addPage(page, buttons);
         }
-
-        //getPage(getCurrentPage()).getEntries().forEach((integer, guiButton) -> System.out.println(integer + " " + guiButton.getButton().getType()));
-
     }
 }
