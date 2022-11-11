@@ -2,7 +2,7 @@ package es.brouse.auctionhouse.serialize;
 
 import com.google.common.collect.Maps;
 import es.brouse.auctionhouse.entities.AuctionHouseItem;
-import es.brouse.auctionhouse.entities.AuctionHouseItemWrapper;
+import es.brouse.auctionhouse.entities.Balance;
 import es.brouse.auctionhouse.exceptions.SerializationException;
 
 import java.util.Map;
@@ -29,6 +29,7 @@ public class WrapperStorage {
     }
 
     static {
-        addWrapper(AuctionHouseItem.class, new AuctionHouseItemWrapper());
+        addWrapper(AuctionHouseItem.class, new AuctionHouseItem.Wrapper());
+        addWrapper(Balance.class, new Balance.Wrapper());
     }
 }
