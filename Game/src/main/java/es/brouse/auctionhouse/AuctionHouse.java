@@ -7,6 +7,7 @@ import es.brouse.auctionhouse.commands.CommandRegister;
 import es.brouse.auctionhouse.config.YamlConfig;
 import es.brouse.auctionhouse.hooks.VaultEconomy;
 import es.brouse.auctionhouse.inventory.InventoryController;
+import es.brouse.auctionhouse.nbt.NBTHelper;
 import es.brouse.auctionhouse.serialize.EntitySerializer;
 import es.brouse.auctionhouse.storage.Mysql;
 import es.brouse.auctionhouse.storage.YAML;
@@ -26,6 +27,7 @@ public class AuctionHouse extends JavaPlugin {
         Logger.init(this);
         YAML.init(this);
         CommandRegister.init(this);
+        NBTHelper.init(this);
 
         //Setup config
         settings = new YamlConfig();

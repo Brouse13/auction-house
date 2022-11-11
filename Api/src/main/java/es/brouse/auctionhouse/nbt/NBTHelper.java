@@ -3,11 +3,30 @@ package es.brouse.auctionhouse.nbt;
 import lombok.experimental.UtilityClass;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.function.Function;
 
 @UtilityClass
 public class NBTHelper {
+    private static JavaPlugin plugin;
+
+    private final Function<String, NamespacedKey> getKey = key ->  new NamespacedKey(plugin, key);
+
+    /**
+     * Singleton that will handle the {@link NBTHelper}
+     * @param plugin plugin that will handle the NBTHelper
+     */
+    public static void init(JavaPlugin plugin) {
+        //Check the singleton instance for the plugin
+        if (NBTHelper.plugin != null)
+            throw new IllegalStateException("NBTHelper class has already been instanced");
+        NBTHelper.plugin = plugin;
+    }
+
 
     /**
      * Know if the given itemStack has any NBT stored
@@ -15,7 +34,7 @@ public class NBTHelper {
      * @return if the item has NBT
      */
     public static boolean hasNBT(ItemStack itemStack) {
-        return getContainer(itemStack).getKeys().isEmpty();
+        return getMeta(itemStack).getPersistentDataContainer().getKeys().isEmpty();
     }
 
     /**
@@ -25,7 +44,8 @@ public class NBTHelper {
      * @return if the key is stored
      */
     public static boolean containsKey(ItemStack itemStack, String key) {
-        return getContainer(itemStack).getKeys().stream().map(NamespacedKey::getKey).anyMatch(key::equals);
+        return getMeta(itemStack).getPersistentDataContainer().getKeys().stream()
+                .map(NamespacedKey::getKey).anyMatch(key::equals);
     }
 
     /**
@@ -36,7 +56,8 @@ public class NBTHelper {
      * @return the stored key
      */
     public static String getKey(ItemStack itemStack, String key) {
-        return getContainer(itemStack).get(new NamespacedKey("ah", key), PersistentDataType.STRING);
+        return getMeta(itemStack).getPersistentDataContainer()
+                .get(getKey.apply(key), PersistentDataType.STRING);
     }
 
     /**
@@ -46,7 +67,11 @@ public class NBTHelper {
      * @param value value to set
      */
     public static void setKey(ItemStack itemStack, String key, String value) {
-        getContainer(itemStack).set(new NamespacedKey("ah", key), PersistentDataType.STRING, value);
+        ItemMeta itemMeta = getMeta(itemStack);
+
+        itemMeta.getPersistentDataContainer().set(getKey.apply(key),
+                PersistentDataType.STRING, value);
+        itemStack.setItemMeta(itemMeta);
     }
 
     /**
@@ -55,7 +80,7 @@ public class NBTHelper {
      * @param key key to remove
      */
     public static void removeKey(ItemStack itemStack, String key) {
-        getContainer(itemStack).remove(new NamespacedKey("ah", key));
+        getMeta(itemStack).getPersistentDataContainer().remove(getKey.apply(key));
     }
 
     /**
@@ -63,7 +88,7 @@ public class NBTHelper {
      * @param itemStack itemStack to get from
      * @return the found persistenceData
      */
-    private static PersistentDataContainer getContainer(ItemStack itemStack) {
-        return itemStack.getItemMeta().getPersistentDataContainer();
+    private static ItemMeta getMeta(ItemStack itemStack) {
+        return itemStack.getItemMeta();
     }
 }
