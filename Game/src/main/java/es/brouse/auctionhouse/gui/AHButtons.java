@@ -31,8 +31,8 @@ public class AHButtons {
 
         //Return the GUIButton of the AHSection
         return ItemBuilder.of(material)
-                .displayName(Translator.getString("messages.ah." + key + ".name", config.getLang()))
-                .lore(Translator.getStringList("messages.ah." + key + ".lore", config.getLang())).build();
+                .displayName(Translator.getString("messages.ah." + key + ".name"))
+                .lore(Translator.getStringList("messages.ah." + key + ".lore")).build();
     }
 
 }

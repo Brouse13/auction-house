@@ -42,8 +42,7 @@ public class SectionGUI extends PagedGUI {
 
     @Override
     public String getTitle() {
-        return Translator.getString("messages.sectiongui.title",
-                AuctionHouse.getSettings().getLang(), section, getCurrentPage());
+        return Translator.getString("messages.sectiongui.title", section, getCurrentPage());
     }
 
     private void loadPage(int page) {

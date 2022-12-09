@@ -2,7 +2,6 @@ package es.brouse.auctionhouse.inventory;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
-import es.brouse.auctionhouse.config.YamlConfig;
 import es.brouse.auctionhouse.translator.Translator;
 import es.brouse.auctionhouse.utils.builders.ItemBuilder;
 import lombok.Getter;
@@ -29,7 +28,7 @@ public class GUI implements InventoryHolder {
      * @param key inventory title
      */
     public GUI(int size, String key) {
-        this.title = Translator.getString(key, new YamlConfig().getLang());
+        this.title = Translator.getString(key);
         this.size = size;
         this.fixed = false;
         this.buttons = Maps.newHashMap();

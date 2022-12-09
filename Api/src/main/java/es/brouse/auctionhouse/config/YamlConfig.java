@@ -11,33 +11,37 @@ public class YamlConfig {
     @Getter private final YAML config = new YAML("config", false);
 
     //LANG
-    @Getter private final Translator.Lang lang;
+    public Translator.Lang getLang() {
+        return config.getDefEnum("config.lang", Translator.Lang.class, Translator.Lang.en_US);
+    }
 
     //DATABASE
-    @Getter private final boolean isMysqlEnabled;
-    @Getter private final String jdbc;
-    @Getter private final String username;
-    @Getter private final String password;
+    public boolean isMysqlEnabled() {
+        return config.getBoolean("config.mysql.enabled", false);
+    }
+
+    public String getJdbc() {
+        return config.getString("config.mysql.jdbc");
+    }
+
+    public String getUsername() {
+        return config.getString("config.mysql.username");
+    }
+
+    public String getPassword() {
+        return config.getString("config.mysql.password");
+    }
 
     //GUI
-    @Getter private final ItemStack nextButton, previousButton;
+    public ItemStack getNextButton() {
+        return ItemBuilder.of(config.getDefEnum("ahgui.next_button", Material.class, Material.ARROW))
+                .displayName(Translator.getString("messages.sectiongui.next_button.name"))
+                .lore(Translator.getStringList("messages.sectiongui.next_button.lore")).build();
+    }
 
-    /**
-     * Creates the default config file
-     */
-    public YamlConfig() {
-        lang = config.getDefEnum("config.lang", Translator.Lang.class, Translator.Lang.en_US);
-
-        isMysqlEnabled = config.getBoolean("config.mysql.enabled", false);
-        jdbc = config.getString("config.mysql.jdbc");
-        username = config.getString("config.mysql.username");
-        password = config.getString("config.mysql.password");
-
-        nextButton = ItemBuilder.of(config.getDefEnum("ahgui.next_button", Material.class, Material.ARROW))
-                .displayName(Translator.getString("messages.sectiongui.next_button.name", getLang()))
-                .lore(Translator.getStringList("messages.sectiongui.next_button.lore", getLang())).build();
-        previousButton = ItemBuilder.of(config.getDefEnum("ahgui.prev_button", Material.class, Material.ARROW))
-                .displayName(Translator.getString("messages.sectiongui.prev_button.name", getLang()))
-                .lore(Translator.getStringList("messages.sectiongui.prev_button.lore", getLang())).build();
+    public ItemStack getPreviousButton() {
+        return ItemBuilder.of(config.getDefEnum("ahgui.prev_button", Material.class, Material.ARROW))
+                .displayName(Translator.getString("messages.sectiongui.prev_button.name"))
+                .lore(Translator.getStringList("messages.sectiongui.prev_button.lore")).build();
     }
 }
