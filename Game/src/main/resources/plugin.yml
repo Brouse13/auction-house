@@ -2,8 +2,9 @@ name: Auctionhouse
 version: '${project.version}'
 main: es.brouse.auctionhouse.AuctionHouse
 api-version: 1.19
-depend:
+softdepend:
   - Vault
+  - ProtocolLib
 prefix: AH
 authors: [ Brouse_13 ]
 commands:
