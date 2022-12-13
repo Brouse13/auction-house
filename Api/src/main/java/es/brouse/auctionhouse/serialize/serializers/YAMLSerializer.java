@@ -24,7 +24,7 @@ public class YAMLSerializer<T extends Entity> extends Serializer<T> {
     @Override
     public boolean existsEntity() {
         //Check if the identifier is present on the storage, os always a String
-        return yaml.contains(entity.getName() + "." + mapper.get("_id"));
+        return yaml.contains(key);
     }
 
     @Override
