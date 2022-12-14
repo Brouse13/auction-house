@@ -5,8 +5,10 @@ import es.brouse.auctionhouse.commands.AHCommand;
 import es.brouse.auctionhouse.commands.BaseCommand;
 import es.brouse.auctionhouse.commands.CommandRegister;
 import es.brouse.auctionhouse.config.YamlConfig;
-import es.brouse.auctionhouse.hooks.VaultEconomy;
+import es.brouse.auctionhouse.hooks.Economy;
+import es.brouse.auctionhouse.hooks.EconomyProvider;
 import es.brouse.auctionhouse.inventory.InventoryController;
+import es.brouse.auctionhouse.inventory.SignGUI;
 import es.brouse.auctionhouse.nbt.NBTHelper;
 import es.brouse.auctionhouse.serialize.EntitySerializer;
 import es.brouse.auctionhouse.storage.Mysql;
@@ -20,6 +22,7 @@ import java.util.Set;
 
 public class AuctionHouse extends JavaPlugin {
     @Getter private static YamlConfig settings;
+    @Getter private static Economy economy;
 
     @Override
     public void onEnable() {
@@ -28,18 +31,17 @@ public class AuctionHouse extends JavaPlugin {
         YAML.init(this);
         CommandRegister.init(this);
         NBTHelper.init(this);
+        SignGUI.init(this);
 
-        //Setup config
+        //Init static fields
         settings = new YamlConfig();
+        economy = new EconomyProvider();
 
         //Setup mysql if enabled
         if(settings.isMysqlEnabled()) {
             Mysql.init(settings);
             EntitySerializer.setSerializer("mysql");
         }
-
-        //Register Economy with the Vault
-        VaultEconomy.RegisterEconomy(this.getServer());
 
         //Register all listeners
         listeners().forEach(listener -> getServer().getPluginManager().registerEvents(listener, this));
@@ -50,7 +52,6 @@ public class AuctionHouse extends JavaPlugin {
 
     @Override
     public void onDisable() {
-
     }
 
     private Set<Listener> listeners() {

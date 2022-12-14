@@ -58,8 +58,8 @@ public class BetButtons {
      */
     public static GUIButton closeInventory(Consumer<InventoryClickEvent> event) {
         return GUIButtonBuilder.create().button(ItemBuilder.of(Material.BARRIER)
-                        .displayName(Translator.getString("messages.betgui.close.name", config.getLang()))
-                        .lore(Translator.getStringList("messages.betgui.close.lore", config.getLang()))
+                        .displayName(Translator.getString("messages.betgui.close.name"))
+                        .lore(Translator.getStringList("messages.betgui.close.lore"))
                         .build()).clickEvent(event).build();
     }
 
@@ -69,8 +69,8 @@ public class BetButtons {
                 .getDefEnum("betgui." + betType, Material.class, Material.GOLD_NUGGET);
 
         return GUIButtonBuilder.create().button(ItemBuilder.of(material)
-                .displayName(Translator.getString(betMessage + ".name", config.getLang()))
-                .lore(Translator.getStringList(betMessage + ".lore", config.getLang()))
+                .displayName(Translator.getString(betMessage + ".name"))
+                .lore(Translator.getStringList(betMessage + ".lore"))
                 .build()).clickEvent(event).build();
     }
 }
