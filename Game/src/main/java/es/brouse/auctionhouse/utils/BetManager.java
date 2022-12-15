@@ -32,9 +32,8 @@ public class BetManager {
     }
 
 
-    private boolean returnBet(AuctionHouseItem clone, Player newBetter) {
+    public boolean returnBet(AuctionHouseItem clone, Player newBetter) {
         //If last_better and owner matches we don't have to return the bet
-        System.out.println(clone);
         if (clone.getLast_better().equals(clone.getOwner())) return true;
 
         OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(UUID.fromString(clone.getLast_better()));

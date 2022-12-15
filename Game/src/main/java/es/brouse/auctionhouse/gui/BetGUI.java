@@ -1,23 +1,21 @@
 package es.brouse.auctionhouse.gui;
 
 import es.brouse.auctionhouse.entities.AuctionHouseItem;
+import es.brouse.auctionhouse.events.AHItemBet;
 import es.brouse.auctionhouse.inventory.GUI;
 import es.brouse.auctionhouse.inventory.SignGUI;
 import es.brouse.auctionhouse.nbt.NBTHelper;
 import es.brouse.auctionhouse.serialize.EntitySerializer;
 import es.brouse.auctionhouse.serialize.serializers.Serializer;
-import es.brouse.auctionhouse.translator.Translator;
-import es.brouse.auctionhouse.utils.BetManager;
-import es.brouse.auctionhouse.utils.Logger;
 import es.brouse.auctionhouse.utils.builders.GUIButtonBuilder;
 import es.brouse.auctionhouse.utils.builders.ItemBuilder;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class BetGUI extends GUI {
     private final AuctionHouseItem item;
-    private final BetManager betManager = new BetManager();
 
     public BetGUI(ItemStack itemStack) {
         super(9, "messages.betgui.title");
@@ -59,30 +57,8 @@ public class BetGUI extends GUI {
     }
 
     private void bet(Player player, AuctionHouseItem item, double priceAdd) {
-        //Try to execute the bet
-        if (!betManager.canBet(player, item, priceAdd)) {
-            Logger.player(player, "messages.player.bet.not_money");
-            return;
-        }
-
-        //TODO make thant when a player bet it returns the initial money to the player and add a timer to the bet
-
-        //Cancel betting for your own item
-        if (item.getOwner().equals(player.getUniqueId().toString())) {
-            Logger.player(player, Translator.getString("messages.player.bet.your_item"));
-            return;
-        }
-
-        //Bet for the item
-        if (betManager.bet(player, item, priceAdd)) {
-            Logger.player(player, translate("messages.player.bet.success",
-                    (item.getPrice() + priceAdd), item.getMaterial()));
-        }else {
-            Logger.player(player, translate("messages.player.bet.error"));
-        }
-    }
-
-    private String translate(String key, Object... args) {
-        return Translator.getString(key, args);
+        //Call AHItemBet event
+        AHItemBet itemBet = new AHItemBet(item, player, priceAdd);
+        Bukkit.getPluginManager().callEvent(itemBet);
     }
 }
