@@ -21,6 +21,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.Set;
 
 public class AuctionHouse extends JavaPlugin {
+    @Getter private static SignGUI signGUI;
     @Getter private static YamlConfig settings;
     @Getter private static Economy economy;
 
@@ -31,7 +32,14 @@ public class AuctionHouse extends JavaPlugin {
         YAML.init(this);
         CommandRegister.init(this);
         NBTHelper.init(this);
-        SignGUI.init(this);
+
+        //Only enables SignGUI if ProtocolLib
+        if (getServer().getPluginManager().isPluginEnabled("ProtocolLib")) {
+            SignGUI.init(this);
+            signGUI = new SignGUI();
+        } else {
+            Logger.log("Not found ProtocolLib. Disabling Sign menus");
+        }
 
         //Init static fields
         settings = new YamlConfig();

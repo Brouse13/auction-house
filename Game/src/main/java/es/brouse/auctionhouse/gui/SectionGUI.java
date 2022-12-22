@@ -3,6 +3,7 @@ package es.brouse.auctionhouse.gui;
 import es.brouse.auctionhouse.AuctionHouse;
 import es.brouse.auctionhouse.entities.AHSection;
 import es.brouse.auctionhouse.entities.AuctionHouseItem;
+import es.brouse.auctionhouse.gui.buttons.SectionButtons;
 import es.brouse.auctionhouse.inventory.GUIButton;
 import es.brouse.auctionhouse.inventory.PagedGUI;
 import es.brouse.auctionhouse.serialize.EntitySerializer;

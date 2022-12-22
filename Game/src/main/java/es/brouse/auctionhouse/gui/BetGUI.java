@@ -1,9 +1,10 @@
 package es.brouse.auctionhouse.gui;
 
+import es.brouse.auctionhouse.AuctionHouse;
 import es.brouse.auctionhouse.entities.AuctionHouseItem;
 import es.brouse.auctionhouse.events.AHItemBet;
+import es.brouse.auctionhouse.gui.buttons.BetButtons;
 import es.brouse.auctionhouse.inventory.GUI;
-import es.brouse.auctionhouse.inventory.SignGUI;
 import es.brouse.auctionhouse.nbt.NBTHelper;
 import es.brouse.auctionhouse.serialize.EntitySerializer;
 import es.brouse.auctionhouse.serialize.serializers.Serializer;
@@ -38,7 +39,7 @@ public class BetGUI extends GUI {
         }));
 
         //If ProtocolLib is enabled add the SignGUI
-        if (SignGUI.isEnabled()) {
+        if (AuctionHouse.getSignGUI() != null) {
             setButton(5, BetButtons.betCustom(event -> new CustomBetGUI()
                     .open(((Player) event.getWhoClicked()), amount ->
                             bet(((Player) event.getWhoClicked()), item, amount))

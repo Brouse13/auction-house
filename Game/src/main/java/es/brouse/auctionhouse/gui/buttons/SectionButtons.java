@@ -1,4 +1,4 @@
-package es.brouse.auctionhouse.gui;
+package es.brouse.auctionhouse.gui.buttons;
 
 import es.brouse.auctionhouse.entities.AuctionHouseItem;
 import es.brouse.auctionhouse.inventory.GUIButton;

@@ -1,6 +1,7 @@
 package es.brouse.auctionhouse.gui;
 
 import es.brouse.auctionhouse.entities.AHSection;
+import es.brouse.auctionhouse.gui.buttons.AHButtons;
 import es.brouse.auctionhouse.inventory.GUI;
 import es.brouse.auctionhouse.utils.builders.ItemBuilder;
 import org.bukkit.Material;

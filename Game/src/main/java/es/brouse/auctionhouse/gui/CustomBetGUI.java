@@ -1,5 +1,6 @@
 package es.brouse.auctionhouse.gui;
 
+import es.brouse.auctionhouse.AuctionHouse;
 import es.brouse.auctionhouse.inventory.SignGUI;
 import org.bukkit.entity.Player;
 
@@ -9,7 +10,7 @@ public class CustomBetGUI {
 
     public void open(Player player, Consumer<Integer> action) {
         //If SignGUI hasn't been enabled
-        if (!SignGUI.isEnabled()) return;
+        if (AuctionHouse.getSignGUI() == null) return;
 
         SignGUI.Menu.builder().response((target, lines) -> {
             try {

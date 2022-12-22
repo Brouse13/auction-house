@@ -1,4 +1,4 @@
-package es.brouse.auctionhouse.gui;
+package es.brouse.auctionhouse.gui.buttons;
 
 import es.brouse.auctionhouse.AuctionHouse;
 import es.brouse.auctionhouse.config.YamlConfig;

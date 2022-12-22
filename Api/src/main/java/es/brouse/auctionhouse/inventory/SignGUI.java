@@ -28,9 +28,6 @@ public class SignGUI {
     private static final Map<Player, Menu> MENUS = Maps.newHashMap();
 
     public static void init(JavaPlugin plugin) {
-        if (!plugin.getServer().getPluginManager().isPluginEnabled("ProtocolLib"))
-            return;
-
         if (Util.isCurrentlyReloading()) {
             Logger.log("Server reload breaks ProtocolLib, disabling signGUI");
             return;
@@ -41,10 +38,6 @@ public class SignGUI {
 
         SignGUI.plugin = plugin;
         scheduler();
-    }
-
-    public static boolean isEnabled() {
-        return plugin != null;
     }
 
     private static void scheduler() {
