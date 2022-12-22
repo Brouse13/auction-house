@@ -6,9 +6,11 @@ import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
+import com.comphenix.protocol.utility.Util;
 import com.comphenix.protocol.wrappers.BlockPosition;
 import com.comphenix.protocol.wrappers.WrappedBlockData;
 import com.google.common.collect.Maps;
+import es.brouse.auctionhouse.utils.Logger;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import org.bukkit.Bukkit;
@@ -28,6 +30,11 @@ public class SignGUI {
     public static void init(JavaPlugin plugin) {
         if (!plugin.getServer().getPluginManager().isPluginEnabled("ProtocolLib"))
             return;
+
+        if (Util.isCurrentlyReloading()) {
+            Logger.log("Server reload breaks ProtocolLib, disabling signGUI");
+            return;
+        }
 
         if (SignGUI.plugin != null)
             throw new IllegalStateException("Logger was already initiated");
