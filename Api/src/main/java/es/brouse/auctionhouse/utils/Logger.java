@@ -42,7 +42,7 @@ public class Logger {
      * @param message message to log
      */
     public static void error(String message) {
-        plugin.getLogger().log(Level.WARNING, message);
+        plugin.getLogger().log(Level.WARNING, "§c + " + message);
     }
 
     /**
